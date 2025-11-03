@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "generatedBy": "scheme/example-run",
+    "lattice": ["bottom", "potential", "active", "confident", "top"],
+    "timestamp": "2025-11-03T00:00:00Z",
+    "description": "Illustrative trace for perception → inference → consensus scenario"
+  },
+  "frames": [
+    {
+      "step": 0,
+      "states": [
+        { "node": "perceptual-array", "level": "potential" },
+        { "node": "inference-engine", "level": "active" },
+        { "node": "consensus-forum", "level": "potential" }
+      ],
+      "observables": [
+        { "node": "perceptual-array", "tau": 1.25 },
+        { "node": "inference-engine", "tau": 3.0 },
+        { "node": "consensus-forum", "tau": 0.9 }
+      ]
+    },
+    {
+      "step": 1,
+      "states": [
+        { "node": "perceptual-array", "level": "active" },
+        { "node": "inference-engine", "level": "active" },
+        { "node": "consensus-forum", "level": "active" }
+      ],
+      "observables": [
+        { "node": "perceptual-array", "tau": 2.5 },
+        { "node": "inference-engine", "tau": 3.0 },
+        { "node": "consensus-forum", "tau": 1.8 }
+      ]
+    },
+    {
+      "step": 2,
+      "states": [
+        { "node": "perceptual-array", "level": "confident" },
+        { "node": "inference-engine", "level": "confident" },
+        { "node": "consensus-forum", "level": "active" }
+      ],
+      "observables": [
+        { "node": "perceptual-array", "tau": 3.75 },
+        { "node": "inference-engine", "tau": 4.5 },
+        { "node": "consensus-forum", "tau": 1.8 }
+      ]
+    },
+    {
+      "step": 3,
+      "states": [
+        { "node": "perceptual-array", "level": "confident" },
+        { "node": "inference-engine", "level": "confident" },
+        { "node": "consensus-forum", "level": "confident" }
+      ],
+      "observables": [
+        { "node": "perceptual-array", "tau": 3.75 },
+        { "node": "inference-engine", "tau": 4.5 },
+        { "node": "consensus-forum", "tau": 2.7 }
+      ]
+    }
+  ]
+}
+
