@@ -1,0 +1,278 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f5f7fa;
+  --bg-panel: #ffffffcc;
+  --fg: #1e2430;
+  --accent: #4c63ff;
+  --accent-dark: #2f3ad7;
+  --border: #d7deea;
+  --font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --bg-panel: #111b36f2;
+    --fg: #e2e8f0;
+    --accent: #7f9bff;
+    --accent-dark: #5f77eb;
+    --border: #223354;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+}
+
+.container {
+  width: min(960px, 90vw);
+  margin: 0 auto;
+  padding: 1.5rem 0;
+}
+
+header {
+  background: linear-gradient(135deg, #101932, #182546 45%, #253664);
+  color: #f5f9ff;
+  padding: 2.5rem 0 2rem 0;
+  border-bottom: 4px solid var(--accent);
+}
+
+header .lead {
+  max-width: 60ch;
+  margin-top: 0.75rem;
+}
+
+main {
+  display: block;
+}
+
+section:not(:last-of-type) {
+  border-bottom: 1px solid var(--border);
+}
+
+h1,
+h2,
+h3 {
+  color: inherit;
+  line-height: 1.2;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.control-group {
+  flex: 1 1 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+select,
+input[type="file"],
+button {
+  font: inherit;
+}
+
+select,
+input[type="file"] {
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: inherit;
+}
+
+.primary {
+  align-self: flex-start;
+  padding: 0.7rem 1.8rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.primary:focus-visible,
+.primary:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.help-text {
+  font-size: 0.9rem;
+  color: #586581;
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .help-text {
+    color: #9ba9c9;
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.summary-grid div {
+  padding: 1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.summary-grid dt {
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+  color: #6c7a94;
+}
+
+.summary-grid dd {
+  font-size: 1.6rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.timeline {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.timeline__list {
+  display: flex;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timeline__item {
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.timeline__item[aria-current="true"],
+.timeline__item:focus-visible,
+.timeline__item:hover {
+  border-color: var(--accent);
+  background: rgba(76, 99, 255, 0.18);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.panel {
+  margin-top: 1.5rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.panel header {
+  background: none;
+  padding: 0;
+  border: none;
+  color: inherit;
+}
+
+.panel__content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.panel__content th,
+.panel__content td {
+  border: 1px solid var(--border);
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(76, 99, 255, 0.22);
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+.level-bottom {
+  background: #cbd5f5;
+}
+
+.level-potential {
+  background: #d8f5e3;
+}
+
+.level-active {
+  background: #ffeab6;
+}
+
+.level-confident {
+  background: #ffd6d6;
+}
+
+.level-top {
+  background: #f5d2ff;
+}
+
+footer {
+  background: #0d1526;
+  color: #d9e0ef;
+  padding: 1.8rem 0;
+  margin-top: 2rem;
+}
+
+footer p {
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  header {
+    padding: 2rem 0 1.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+}
+
