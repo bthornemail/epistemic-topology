@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Decentralized Automaton Network Lattice - Web Interface">
+    <meta name="keywords" content="DANL, distributed systems, epistemic computing, lattice network">
+    <meta name="author" content="Brian James Thorne, Axiomatic Research Laboratory">
+    
+    <title>DANL - Decentralized Automaton Network Lattice</title>
+    
+    <!-- W3C CSS3 Compliant Styling -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Web Components Polyfill for older browsers -->
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
+    
+    <!-- ARIA Accessibility -->
+    <script>
+        // Ensure ARIA landmarks are properly announced
+        if ('ariaLabel' in document.createElement('div')) {
+            console.log('ARIA support detected');
+        }
+    </script>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to main content</a>
+    
+    <!-- Main Application Container -->
+    <div id="app" class="app-container" role="application" aria-label="DANL Control Interface">
+        
+        <!-- Header -->
+        <header role="banner" class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="logo">⬡</span>
+                    DANL
+                    <span class="subtitle">Decentralized Automaton Network Lattice</span>
+                </h1>
+                <nav role="navigation" aria-label="Main navigation">
+                    <ul class="nav-menu">
+                        <li><a href="#dashboard" aria-current="page">Dashboard</a></li>
+                        <li><a href="#network">Network View</a></li>
+                        <li><a href="#epistemic">Epistemic State</a></li>
+                        <li><a href="#consensus">Consensus</a></li>
+                        <li><a href="#events">Event Log</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main id="main-content" role="main" class="main-content">
+            
+            <!-- Network Status Panel -->
+            <section id="network-status" class="panel" role="region" aria-labelledby="network-status-title">
+                <h2 id="network-status-title">Network Status</h2>
+                <div class="status-grid">
+                    <danl-status-card 
+                        label="Active Nodes" 
+                        value="0" 
+                        id="node-count"
+                        icon="🔷"
+                        aria-live="polite">
+                    </danl-status-card>
+                    
+                    <danl-status-card 
+                        label="Geometric Level" 
+                        value="Tetrahedron" 
+                        id="geometric-level"
+                        icon="📐"
+                        aria-live="polite">
+                    </danl-status-card>
+                    
+                    <danl-status-card 
+                        label="Consensus Threshold" 
+                        value="0.75" 
+                        id="consensus-threshold"
+                        icon="⚖️"
+                        aria-live="polite">
+                    </danl-status-card>
+                    
+                    <danl-status-card 
+                        label="Events Processed" 
+                        value="0" 
+                        id="event-count"
+                        icon="📊"
+                        aria-live="polite">
+                    </danl-status-card>
+                </div>
+            </section>
+            
+            <!-- M-Expression Command Input -->
+            <section id="command-input" class="panel" role="region" aria-labelledby="command-input-title">
+                <h2 id="command-input-title">M-Expression Command Interface</h2>
+                <form id="m-expr-form" aria-label="M-Expression submission form">
+                    <div class="form-group">
+                        <label for="m-expr-input">M-Expression Command:</label>
+                        <input 
+                            type="text" 
+                            id="m-expr-input" 
+                            name="m-expr" 
+                            placeholder="createBinding[identifier; scope]"
+                            aria-describedby="m-expr-help"
+                            autocomplete="off"
+                            required>
+                        <small id="m-expr-help" class="help-text">
+                            Format: functor[arg1; arg2; ...]
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Quick Commands:</label>
+                        <div class="button-group" role="group" aria-label="Quick command templates">
+                            <button type="button" class="btn-secondary" data-template="createBinding[x; global]">
+                                Create Binding
+                            </button>
+                            <button type="button" class="btn-secondary" data-template="enterScope[scope-1]">
+                                Enter Scope
+                            </button>
+                            <button type="button" class="btn-secondary" data-template="callRPC[node-1; compute; []]">
+                                Call RPC
+                            </button>
+                            <button type="button" class="btn-secondary" data-template="query[epistemic; [node-1]]">
+                                Query State
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" aria-label="Submit M-Expression command">
+                        <span class="btn-icon">⚡</span>
+                        Execute Command
+                    </button>
+                </form>
+                
+                <!-- Compiled S-Expression Output -->
+                <div id="s-expr-output" class="output-box" role="log" aria-label="Compiled S-Expression output" aria-live="polite">
+                    <h3>Compiled S-Expression:</h3>
+                    <pre id="s-expr-content" aria-label="S-Expression code"></pre>
+                </div>
+            </section>
+            
+            <!-- Network Visualization -->
+            <section id="network-viz" class="panel" role="region" aria-labelledby="network-viz-title">
+                <h2 id="network-viz-title">Network Topology</h2>
+                <div class="viz-controls" role="toolbar" aria-label="Visualization controls">
+                    <button class="btn-secondary" id="add-node-btn" aria-label="Add new node">
+                        <span class="btn-icon">➕</span> Add Node
+                    </button>
+                    <button class="btn-secondary" id="add-edge-btn" aria-label="Add hyperedge">
+                        <span class="btn-icon">🔗</span> Add Hyperedge
+                    </button>
+                    <button class="btn-secondary" id="layout-btn" aria-label="Auto-layout network">
+                        <span class="btn-icon">🎯</span> Auto Layout
+                    </button>
+                </div>
+                
+                <!-- SVG Canvas for network visualization -->
+                <svg 
+                    id="network-canvas" 
+                    class="network-svg"
+                    role="img"
+                    aria-label="Network topology visualization"
+                    viewBox="0 0 800 600"
+                    preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <!-- Gradient for nodes -->
+                        <linearGradient id="node-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <!-- Arrow marker for directed edges -->
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" 
+                                refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#6366f1" />
+                        </marker>
+                    </defs>
+                    
+                    <!-- Groups for layered rendering -->
+                    <g id="edges-layer" aria-label="Network edges"></g>
+                    <g id="nodes-layer" aria-label="Network nodes"></g>
+                    <g id="labels-layer" aria-label="Node labels"></g>
+                </svg>
+            </section>
+            
+            <!-- Epistemic State Panel -->
+            <section id="epistemic-state" class="panel" role="region" aria-labelledby="epistemic-state-title">
+                <h2 id="epistemic-state-title">Epistemic State Monitor</h2>
+                
+                <div class="epistemic-grid">
+                    <!-- Known Knowns (KK) -->
+                    <div class="epistemic-card kk-card" role="article" aria-labelledby="kk-title">
+                        <h3 id="kk-title">Known Knowns (KK)</h3>
+                        <div class="epistemic-value" id="kk-value" aria-live="polite">0</div>
+                        <div class="epistemic-bar">
+                            <div class="bar-fill kk-bar" style="width: 0%" role="progressbar" 
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="epistemic-description">Verified, explicit knowledge</p>
+                    </div>
+                    
+                    <!-- Known Unknowns (KU) -->
+                    <div class="epistemic-card ku-card" role="article" aria-labelledby="ku-title">
+                        <h3 id="ku-title">Known Unknowns (KU)</h3>
+                        <div class="epistemic-value" id="ku-value" aria-live="polite">0</div>
+                        <div class="epistemic-bar">
+                            <div class="bar-fill ku-bar" style="width: 0%" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="epistemic-description">Explicit uncertainties</p>
+                    </div>
+                    
+                    <!-- Unknown Knowns (UK) -->
+                    <div class="epistemic-card uk-card" role="article" aria-labelledby="uk-title">
+                        <h3 id="uk-title">Unknown Knowns (UK)</h3>
+                        <div class="epistemic-value" id="uk-value" aria-live="polite">0</div>
+                        <div class="epistemic-bar">
+                            <div class="bar-fill uk-bar" style="width: 0%" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="epistemic-description">Implicit knowledge (UK·φ)</p>
+                    </div>
+                    
+                    <!-- Unknown Unknowns (UU) -->
+                    <div class="epistemic-card uu-card" role="article" aria-labelledby="uu-title">
+                        <h3 id="uu-title">Unknown Unknowns (UU)</h3>
+                        <div class="epistemic-value" id="uu-value" aria-live="polite">0</div>
+                        <div class="epistemic-bar">
+                            <div class="bar-fill uu-bar" style="width: 0%" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="epistemic-description">Epistemic horizon</p>
+                    </div>
+                </div>
+                
+                <!-- Observable Parameterization Display -->
+                <div class="observable-params" role="complementary" aria-labelledby="observable-title">
+                    <h3 id="observable-title">Observable Parameters</h3>
+                    <dl class="param-list">
+                        <dt>τ<sub>UK</sub> (UK·φ):</dt>
+                        <dd id="tau-uk" aria-live="polite">0</dd>
+                        
+                        <dt>τ<sub>UU</sub> (UU·d<sub>inner</sub>):</dt>
+                        <dd id="tau-uu" aria-live="polite">0</dd>
+                        
+                        <dt>φ(V) (Euler Phi):</dt>
+                        <dd id="phi-value" aria-live="polite">2</dd>
+                        
+                        <dt>Certainty:</dt>
+                        <dd id="certainty-value" aria-live="polite">0.00</dd>
+                        
+                        <dt>Confidence:</dt>
+                        <dd id="confidence-value" aria-live="polite">0.00</dd>
+                    </dl>
+                </div>
+            </section>
+            
+            <!-- Consensus Monitor -->
+            <section id="consensus-monitor" class="panel" role="region" aria-labelledby="consensus-title">
+                <h2 id="consensus-title">Consensus Monitor</h2>
+                
+                <div class="consensus-status" role="status" aria-live="polite">
+                    <div class="consensus-indicator" id="consensus-indicator">
+                        <span class="indicator-icon">⏳</span>
+                        <span class="indicator-text">Waiting for proposals...</span>
+                    </div>
+                </div>
+                
+                <div class="consensus-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Agreeing Nodes:</span>
+                        <span class="detail-value" id="agreeing-count" aria-live="polite">0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total Nodes:</span>
+                        <span class="detail-value" id="total-nodes" aria-live="polite">0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Agreement Ratio:</span>
+                        <span class="detail-value" id="agreement-ratio" aria-live="polite">0.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Required Threshold:</span>
+                        <span class="detail-value" id="required-threshold" aria-live="polite">0.75</span>
+                    </div>
+                </div>
+                
+                <div class="consensus-chart">
+                    <canvas id="consensus-canvas" width="400" height="200" 
+                            role="img" aria-label="Consensus visualization chart"></canvas>
+                </div>
+            </section>
+            
+            <!-- Event Stream -->
+            <section id="event-stream" class="panel" role="region" aria-labelledby="event-stream-title">
+                <h2 id="event-stream-title">S-Expression Event Stream</h2>
+                
+                <div class="stream-controls" role="toolbar" aria-label="Event stream controls">
+                    <button class="btn-secondary" id="pause-stream-btn" aria-label="Pause event stream">
+                        <span class="btn-icon">⏸️</span> Pause
+                    </button>
+                    <button class="btn-secondary" id="clear-stream-btn" aria-label="Clear event stream">
+                        <span class="btn-icon">🗑️</span> Clear
+                    </button>
+                    <button class="btn-secondary" id="export-stream-btn" aria-label="Export events">
+                        <span class="btn-icon">💾</span> Export
+                    </button>
+                </div>
+                
+                <div id="event-log" class="event-log" role="log" aria-label="Event log" aria-live="polite">
+                    <!-- Events will be dynamically added here -->
+                </div>
+            </section>
+            
+            <!-- Vector Clock Visualization -->
+            <section id="vector-clock" class="panel" role="region" aria-labelledby="vclock-title">
+                <h2 id="vclock-title">Vector Clock State</h2>
+                <div id="vclock-display" class="vclock-grid" role="list" aria-label="Vector clock values">
+                    <!-- Vector clock entries will be dynamically added -->
+                </div>
+            </section>
+            
+        </main>
+        
+        <!-- Footer -->
+        <footer role="contentinfo" class="app-footer">
+            <div class="footer-content">
+                <p>
+                    <strong>DANL</strong> - Decentralized Automaton Network Lattice<br>
+                    Version 1.0 | 
+                    <a href="https://github.com/axiomatic-research/danl" target="_blank" rel="noopener">
+                        GitHub Repository
+                    </a> | 
+                    <a href="LICENSE.txt">MIT License</a>
+                </p>
+                <p class="copyright">
+                    © 2025 Brian James Thorne, Axiomatic Research Laboratory
+                </p>
+            </div>
+        </footer>
+        
+    </div>
+    
+    <!-- Web Components -->
+    <script type="module" src="components/status-card.js"></script>
+    <script type="module" src="components/node-element.js"></script>
+    
+    <!-- Main Application Logic -->
+    <script type="module" src="app.js"></script>
+    
+    <!-- WebSocket Connection Manager -->
+    <script type="module" src="websocket-client.js"></script>
+    
+</body>
+</html>
