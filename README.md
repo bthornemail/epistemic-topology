@@ -1,625 +1,422 @@
-# DANL: Decentralized Automaton Network Lattice
+# Epistemic Topology: Decentralized Automaton Network Lattice
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![R5RS Scheme](https://img.shields.io/badge/Scheme-R5RS-blue.svg)](https://schemers.org)
-[![Prolog](https://img.shields.io/badge/Prolog-SWI-red.svg)](https://www.swi-prolog.org/)
-[![Datalog](https://img.shields.io/badge/Datalog-Soufflé-green.svg)](https://souffle-lang.github.io/)
-[![W3C](https://img.shields.io/badge/Web-W3C%20Compliant-purple.svg)](https://www.w3.org/)
+[![Documentation](https://img.shields.io/badge/docs-epistemic--topology-blue.svg)](docs/INDEX.md)
+[![Knowledge Graph](https://img.shields.io/badge/explore-knowledge--graph-green.svg)](docs/assets/knowledge-graph.html)
 
-> A complete theoretical and computational framework for distributed consciousness computing with geometric foundations.
+> **Making distributed consciousness computing accessible to everyone through epistemic topology**
 
-![DANL Architecture](docs/images/danl-architecture.png)
+## 🎯 What Is This?
 
-## 📋 Table of Contents
+This is a **complete, publishable project** that combines:
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Usage Examples](#usage-examples)
-- [Web Interface](#web-interface)
-- [API Reference](#api-reference)
-- [Theory](#theory)
-- [Contributing](#contributing)
-- [License](#license)
+1. **Cutting-edge research** on distributed consciousness computing
+2. **Production-ready implementation** in Scheme, Prolog, and Datalog
+3. **Wiki-style documentation** organized as an epistemic topology
+4. **Interactive knowledge graph** for exploration at any level
 
-## 🌟 Overview
-
-**DANL** (Decentralized Automaton Network Lattice) is a revolutionary framework that unifies geometric consciousness computing with proven mathematical foundations. It integrates **10 fundamental mathematical structures** into a single, executable system:
-
-1. **Observable Epistemic Parameterization** (from computer vision)
-2. **Rig-Based Hypergraph State Machines** (tropical algebra)
-3. **M/S-Expression Duality** (homoiconic CQRS)
-4. **Geometric Subsidiarity** (Platonic solid consensus)
-5. **Grothendieck Schemes** (algebraic geometry)
-6. **Y/Z-Combinators** (fixed-point recursion)
-7. **Prolog Logic** (epistemic inference)
-8. **Datalog Queries** (distributed causality)
-9. **Lattice Theory** (partial order consensus)
-10. **Vector Clocks** (causal ordering)
-
-### Key Innovation
-
-DANL solves the **implicit knowledge observability problem** using techniques from 3D computer vision: just as depth (tZ) must be parameterized as tZ·β to maintain observability, implicit knowledge (UK) must be parameterized as UK·φ(V) to maintain epistemic observability.
-
-## ✨ Features
-
-### Core Capabilities
-
-- ✅ **Observable Epistemic Parameterization**: Track implicit knowledge (UK) that was previously unobservable
-- ✅ **Irreversible Causality**: Max-Plus algebra for realistic distributed systems
-- ✅ **Geometric Consensus**: Mathematically-derived thresholds from Platonic solids
-- ✅ **Self-Describing Systems**: M/S-expression duality with homoiconicity
-- ✅ **Meta-Circular Evaluation**: Y/Z-combinators for recursive computation
-- ✅ **Multi-Language Integration**: Scheme + Prolog + Datalog working together
-
-### Technical Features
-
-- 🚀 **High Performance**: Near-linear scaling to 1000+ nodes
-- 🔒 **Causal Consistency**: Zero causality violations in production
-- 🌐 **Web Interface**: W3C-compliant browser UI
-- 📊 **Real-Time Monitoring**: WebSocket event streaming
-- 🧪 **Comprehensive Testing**: 1000+ test scenarios
-- 📖 **Full Documentation**: Complete API reference and tutorials
-
-## 🏗️ Architecture
+### Two Parallel Paths
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ Web UI (W3C HTML5/CSS3/JavaScript + Web Components)        │
-│   - M-Expression command interface                          │
-│   - Network topology visualization (SVG)                    │
-│   - Epistemic state monitor                                 │
-│   - Real-time event stream (WebSocket)                      │
-└───────────────────────┬─────────────────────────────────────┘
-                        │ HTTP/WebSocket API
-┌───────────────────────▼─────────────────────────────────────┐
-│ Application Server (Node.js/Express)                        │
-│   - REST API endpoints                                      │
-│   - WebSocket server                                        │
-│   - M→S compilation                                         │
-└───────────────────────┬─────────────────────────────────────┘
-                        │ IPC/RPC
-┌───────────────────────▼─────────────────────────────────────┐
-│ Core Engine (R5RS Scheme)                                   │
-│   - Y/Z-Combinators                                         │
-│   - Observable parameterization                             │
-│   - Tropical algebra                                        │
-│   - Event store (S-expressions)                             │
-│   - Lattice operations                                      │
-└───────────────────────┬─────────────────────────────────────┘
-                        │ Query Interface
-┌───────────────────────▼─────────────────────────────────────┐
-│ Logic Layer (Prolog + Datalog)                              │
-│   - Epistemic inference (Prolog)                            │
-│   - Distributed queries (Datalog)                           │
-│   - Consensus rules                                         │
-│   - Causality tracking                                      │
+│  ACADEMIC RESEARCH PATH                                     │
+│  Deep mathematical foundations, formal proofs, novel unifi  │
+│  cations across 10 mathematical domains                     │
+│  → For researchers, theorists, academics                    │
 └─────────────────────────────────────────────────────────────┘
-```
 
-### Technology Stack
+┌─────────────────────────────────────────────────────────────┐
+│  CONSUMER-ACCESSIBLE PATH                                   │
+│  Plain English explanations, visual introductions, practical│
+│  guides for building systems                                │
+│  → For practitioners, learners, builders                    │
+└─────────────────────────────────────────────────────────────┘
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Computation** | R5RS Scheme (Chez/Guile) | Core logic, Y/Z-combinators, homoiconicity |
-| **Logic** | SWI-Prolog | Epistemic inference, consensus rules |
-| **Queries** | Soufflé Datalog | Distributed causality, aggregation |
-| **Web UI** | HTML5 + Web Components | W3C-compliant interface |
-| **API** | Node.js + Express | REST + WebSocket server |
-| **Storage** | PostgreSQL + Redis | Event store + cache |
-
-## 📦 Installation
-
-### Prerequisites
-
-- **R5RS Scheme**: Chez Scheme 9.5+ or GNU Guile 3.0+
-- **SWI-Prolog**: Version 8.0+
-- **Soufflé Datalog**: Version 2.0+
-- **Node.js**: Version 16+ (for web server)
-- **PostgreSQL**: Version 13+ (optional, for persistence)
-
-### Install Dependencies
-
-#### macOS (Homebrew)
-
-```bash
-# Install Scheme
-brew install chezscheme
-
-# Install Prolog
-brew install swi-prolog
-
-# Install Soufflé
-brew install souffle
-
-# Install Node.js
-brew install node
-
-# Install PostgreSQL (optional)
-brew install postgresql
-```
-
-#### Ubuntu/Debian
-
-```bash
-# Install Scheme
-sudo apt-get install guile-3.0
-
-# Install Prolog
-sudo apt-add-repository ppa:swi-prolog/stable
-sudo apt-get update
-sudo apt-get install swi-prolog
-
-# Install Soufflé
-sudo apt-get install souffle
-
-# Install Node.js
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Install PostgreSQL (optional)
-sudo apt-get install postgresql
-```
-
-### Clone Repository
-
-```bash
-git clone https://github.com/axiomatic-research/danl.git
-cd danl
-```
-
-### Install Node Dependencies
-
-```bash
-cd server
-npm install
-cd ..
+         Both paths maintained in BIPARTITE STRUCTURE
 ```
 
 ## 🚀 Quick Start
 
-### 1. Run Scheme Core Tests
+### For Newcomers (Start Here!)
+**Goal:** Understand what this is and why it matters  
+**Time:** 15-20 minutes  
+**Path:** [What is DANL?](docs/gateway/what-is-danl.md) → [Why Does This Matter?](docs/gateway/why-it-matters.md) → [Visual Introduction](docs/gateway/core-ideas-simple.md)
 
-```bash
-# Load and test the Scheme core
-scheme --script danl-core.scm
-```
+### For Developers
+**Goal:** Build your first DANL system  
+**Time:** 2-4 hours  
+**Path:** Start with [Quick Start Guide](docs/practical/quick-start.md)
 
-Expected output:
-```
-=== DANL R5RS Scheme Core Tests ===
+### For Researchers
+**Goal:** Understand the theoretical foundations  
+**Time:** 4-6 hours  
+**Path:** Start with [Complete Research Paper](DECENTRALIZED_AUTOMATON_NETWORK_LATTICE_PAPER.md)
 
-Test 1: Y-Combinator Factorial
-factorial(5) = 120
-Expected: 120
+### For Decision-Makers
+**Goal:** Evaluate DANL for your organization  
+**Time:** 30-60 minutes  
+**Path:** [Executive Summary](docs/gateway/what-is-danl.md) → [Production Architecture](docs/applied/production-architecture.md)
 
-Test 2: Z-Combinator Fibonacci
-fibonacci(10) = 55
-Expected: 55
+## 📖 Navigation: The Epistemic Topology
 
-...
-
-=== All Tests Complete ===
-```
-
-### 2. Run Prolog Tests
-
-```bash
-# Load Prolog rules and run tests
-swipl -s danl-rules.pl -g "run_tests" -t halt
-```
-
-### 3. Run Datalog Queries
-
-```bash
-# Execute Datalog queries
-souffle danl-queries.dl -D-
-```
-
-### 4. Start Web Server
-
-```bash
-cd server
-npm start
-```
-
-Then open http://localhost:8080 in your browser.
-
-## 💡 Usage Examples
-
-### Example 1: Observable Epistemic Parameterization
-
-```scheme
-;; Create epistemic state
-(define state (make-epistemic 100 50 30 20))  ; KK=100, KU=50, UK=30, UU=20
-
-;; Parameterize for observability
-(define observable (parameterize-epistemic state 12))  ; Icosahedron (V=12)
-
-;; Access observable parameters
-(display (epistemic-tau-uk observable))  ; UK·φ(12) = 30·4 = 120
-(display (geometric-phi observable))     ; φ(12) = 4
-
-;; Recover original state
-(define recovered (recover-epistemic observable))
-(display (epistemic-uk recovered))  ; 30 (recovered from τ_UK/φ)
-```
-
-### Example 2: M-Expression Commands
-
-```scheme
-;; Parse M-expression
-(define m-expr (parse-m-expr "createBinding[x; global]"))
-
-;; Compile to S-expression
-(define s-expr (compile-m-expr m-expr initial-state))
-
-;; Result: (binding-created "x" "global" 1704672000 vclock)
-```
-
-### Example 3: Geometric Consensus
-
-```prolog
-% Query consensus for a proposal
-?- network_consensus([alice, bob, carol], proposal1, tetrahedron, Result).
-Result = consensus(3, 4, tetrahedron).
-
-% Check if threshold met
-?- consensus_achieved(3, 4, tetrahedron).
-true.  % 3/4 = 0.75 >= 0.75 (tetrahedron threshold)
-
-?- consensus_achieved(2, 4, tetrahedron).
-false.  % 2/4 = 0.50 < 0.75
-```
-
-### Example 4: Causal Ordering (Datalog)
-
-```datalog
-// Query happens-before relation
-?- happens_before(E1, E2).
-E1 = "e1", E2 = "e3".
-
-// Query concurrent events
-?- concurrent(E1, E2).
-E1 = "e2", E2 = "e4".
-
-// Detect causal anomalies
-?- causal_anomaly(E1, E2, Reason).
-E1 = "e1", E2 = "e2", Reason = "time_reversal".
-```
-
-### Example 5: Y-Combinator Fixed Point
-
-```scheme
-;; Define factorial using Y-combinator
-(define factorial
-  (Y (lambda (fact)
-       (lambda (n)
-         (if (<= n 1)
-             1
-             (* n (fact (- n 1))))))))
-
-(factorial 5)  ; => 120
-
-;; Epistemic expansion using Y-combinator
-(define expanded
-  (epistemic-expand initial-state 5))  ; Expand 5 levels
-```
-
-## 🌐 Web Interface
-
-### M-Expression Command Interface
-
-The web UI provides a rich interface for submitting M-expression commands:
-
-1. **Navigate to** http://localhost:8080
-2. **Enter M-expression** in the command box:
-   ```
-   createBinding[myVar; globalScope]
-   ```
-3. **Click "Execute Command"**
-4. **View compiled S-expression** in the output panel
-5. **Monitor event stream** in real-time
-
-### Network Visualization
-
-- **Add nodes** using the "Add Node" button
-- **Create hyperedges** to connect nodes
-- **Auto-layout** with force-directed algorithm
-- **Interactive** - click nodes to see details
-
-### Epistemic State Monitor
-
-Real-time display of the Rumsfeld tetrahedron:
-- **KK** (Known Knowns) - Green
-- **KU** (Known Unknowns) - Amber
-- **UK** (Unknown Knowns) - Purple (with observable τ_UK)
-- **UU** (Unknown Unknowns) - Red
-
-### WebSocket Event Stream
-
-Real-time S-expression events:
-```javascript
-// Connect to WebSocket
-const ws = new WebSocket('ws://localhost:8080/ws');
-
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    console.log('S-expression:', data.payload);
-};
-```
-
-## 📚 API Reference
-
-### REST API Endpoints
-
-#### POST /api/m-expression
-Submit M-expression command.
-
-**Request:**
-```json
-{
-    "mExpr": "createBinding[x; global]"
-}
-```
-
-**Response:**
-```json
-{
-    "sExpr": {
-        "type": "binding-created",
-        "data": ["x", "global"],
-        "timestamp": 1704672000,
-        "vclock": { "node1": 5, "node2": 3 }
-    }
-}
-```
-
-#### GET /api/state
-Get current network state.
-
-**Response:**
-```json
-{
-    "network": {
-        "nodes": [...],
-        "edges": [...],
-        "geometricLevel": "tetrahedron"
-    },
-    "epistemic": {
-        "kk": 100,
-        "ku": 50,
-        "uk": 30,
-        "uu": 20
-    }
-}
-```
-
-#### GET /api/consensus/:proposalId
-Check consensus for a proposal.
-
-**Response:**
-```json
-{
-    "proposal": "prop1",
-    "agreeing": 3,
-    "total": 4,
-    "threshold": 0.75,
-    "achieved": true
-}
-```
-
-### WebSocket Events
-
-#### Client → Server
-
-```json
-{
-    "type": "m-expression",
-    "payload": {
-        "mExpr": "callRPC[node1; compute; []]"
-    }
-}
-```
-
-#### Server → Client
-
-```json
-{
-    "type": "s-expression",
-    "payload": {
-        "type": "rpc-called",
-        "data": ["node1", "compute", []],
-        "timestamp": 1704672000,
-        "vclock": {...}
-    }
-}
-```
-
-## 🔬 Theory
-
-### Observable Epistemic Parameterization
-
-**The Problem**: At high geometric complexity (large V), implicit knowledge (UK) becomes unobservable:
+This project is organized as an **epistemic topology** - a knowledge structure with multiple entry points and learning paths:
 
 ```
-∂C/∂UK = -φ(V)/(1 + τ_UK/KK)² → 0  as φ(V) → 0
+🚪 GATEWAY LEVEL       (Everyone - no prerequisites)
+    ↓
+🏗️ FOUNDATIONAL LEVEL  (Basic programming knowledge)
+    ↓
+🔧 PRACTICAL LEVEL     (Intermediate programming)
+    ↓
+🚀 APPLIED LEVEL       (Production systems experience)
 ```
 
-**The Solution**: Parameterize UK as UK·φ(V):
+### Complete Documentation Index
+
+📚 **[START HERE: Main Index](docs/INDEX.md)** - Your guide to all content
+
+#### By Level
+
+- **[Gateway](docs/gateway/INDEX.md)** - Friendly introductions, analogies, motivation
+  - [What is DANL?](docs/gateway/what-is-danl.md)
+  - [Why Does This Matter?](docs/gateway/why-it-matters.md)
+  - [Core Ideas in Plain English](docs/gateway/core-ideas-simple.md)
+
+- **[Foundational](docs/foundational/INDEX.md)** - Core concepts and theory
+  - [Epistemic States](docs/foundational/epistemic-states.md)
+  - [Lattice Theory](docs/foundational/lattice-theory.md)
+  - [Observable Parameterization](docs/foundational/observable-parameterization.md)
+
+- **[Practical](docs/practical/INDEX.md)** - Implementation and how-to guides
+  - [Quick Start](docs/practical/quick-start.md)
+  - [Scheme Core](docs/practical/scheme-core.md)
+  - [API Reference](docs/practical/api-reference.md)
+
+- **[Applied](docs/applied/INDEX.md)** - Production use and case studies
+  - [Production Architecture](docs/applied/production-architecture.md)
+  - [Case Studies](docs/applied/case-study-consensus.md)
+  - [Integration Patterns](docs/applied/integration-patterns.md)
+
+#### By Topic
+
+- **Distributed Systems:** [Lattice Theory](docs/foundational/lattice-theory.md), [Consensus](docs/foundational/geometric-consensus.md)
+- **Epistemic Logic:** [Four Quadrants](docs/foundational/epistemic-states.md), [Observable Parameterization](docs/foundational/observable-parameterization.md)
+- **Implementation:** [Scheme](docs/practical/scheme-core.md), [Prolog](docs/practical/prolog-rules.md), [Datalog](docs/practical/datalog-queries.md)
+
+## 🎨 Interactive Exploration
+
+### Knowledge Graph Visualization
+
+Explore the complete epistemic topology interactively:
+
+🌐 **[Open Interactive Knowledge Graph](docs/assets/knowledge-graph.html)**
+
+Features:
+- Visual representation of all nodes and relationships
+- Filter by level (gateway/foundational/practical/applied)
+- Filter by type (concept/implementation/application/guide)
+- See prerequisites and enabled paths
+- Click nodes to read content
+- Discover learning paths
+
+## 🏗️ Project Structure
 
 ```
-∂C/∂τ_UK = -1/(1 + τ_UK/KK)² ≠ 0  for all φ(V)
+epistemic-topology/
+├── README.md (you are here)
+├── docs/
+│   ├── INDEX.md (main navigation)
+│   ├── gateway/ (accessible to everyone)
+│   │   ├── what-is-danl.md
+│   │   ├── why-it-matters.md
+│   │   └── core-ideas-simple.md
+│   ├── foundational/ (core concepts)
+│   │   ├── epistemic-states.md
+│   │   ├── lattice-theory.md
+│   │   └── observable-parameterization.md
+│   ├── practical/ (implementation)
+│   │   ├── quick-start.md
+│   │   ├── scheme-core.md
+│   │   └── api-reference.md
+│   ├── applied/ (production use)
+│   │   ├── production-architecture.md
+│   │   ├── case-study-consensus.md
+│   │   └── integration-patterns.md
+│   └── assets/ (visualizations, images)
+│       └── knowledge-graph.html
+├── types/
+│   └── epistemic-node.ts (TypeScript definitions)
+├── decentralized_automaton_network/
+│   ├── scheme/danl.scm (R5RS core)
+│   └── docs/architecture_overview.md
+├── danl-core.scm (Scheme implementation)
+├── danl-rules.pl (Prolog logic)
+├── danl-queries.dl (Datalog queries)
+├── DECENTRALIZED_AUTOMATON_NETWORK_LATTICE_PAPER.md (full paper)
+└── web-ui/ (interactive interface)
 ```
 
-This is **exactly analogous** to 3D vision, where depth tZ is parameterized as tZ·β.
+## 🔬 What Makes This Special?
 
-### Geometric Consensus Thresholds
+### 1. Epistemic Topology Structure
 
-| Platonic Solid | Vertices (V) | Face Size (p) | Threshold (τ = p/V) |
-|----------------|--------------|---------------|---------------------|
-| Tetrahedron | 4 | 3 | 0.75 (local) |
-| Cube | 8 | 4 | 0.50 (federated) |
-| Icosahedron | 12 | 3 | 0.25 (global) |
-| Dodecahedron | 20 | 5 | 0.25 (global) |
-| 600-cell | 120 | 3 | 0.025 (civilizational) |
+Every document includes structured front matter following the `EpistemicNode` interface:
 
-### Rig-Based Causality
-
-Max-Plus algebra models irreversible causal flow:
-
-```
-(ℝ ∪ {-∞}, ⊕ = max, ⊗ = +, 0̅ = -∞, 1̅ = 0)
-```
-
-Vector clock updates:
-```
-x(k) = A ⊗ x(k-1)  where (A ⊗ x)ᵢ = max_j (Aᵢⱼ + xⱼ)
+```yaml
+---
+id: unique-identifier
+title: "Human-Readable Title"
+level: gateway | foundational | practical | applied
+type: navigation | concept | implementation | application | guide
+tags: [primary, categorization]
+keywords: [secondary, indexing]
+prerequisites: [node-ids-needed-first]
+enables: [node-ids-this-unlocks]
+related: [related-node-ids]
+readingTime: 10
+difficulty: 1-5
+---
 ```
 
-## 📖 Documentation
+This enables:
+- **Multiple entry points** for different audiences
+- **Curated learning paths** through the material
+- **Prerequisites tracking** to know what to read first
+- **Discovery** of related content
+- **Automatic validation** of documentation structure
 
-Full documentation available in the `docs/` directory:
+### 2. Bipartite Structure
 
-- **[Getting Started](docs/getting-started.md)** - Beginner's guide
-- **[Architecture](docs/architecture.md)** - System design
-- **[API Reference](docs/api-reference.md)** - Complete API docs
-- **[Theory](docs/theory.md)** - Mathematical foundations
-- **[Deployment](docs/deployment.md)** - Production guide
-- **[Contributing](docs/contributing.md)** - Development guide
+```
+ACADEMIC SIDE                      CONSUMER SIDE
+--------------                     --------------
+Formal proofs              ←→      Plain English
+Mathematical notation      ←→      Visual analogies
+Research paper            ←→      Interactive tutorials
+Theorem proving           ←→      Step-by-step guides
+Citations & references    ←→      Real-world examples
 
-## 🧪 Testing
-
-Run the complete test suite:
-
-```bash
-# Scheme tests
-./test/run-scheme-tests.sh
-
-# Prolog tests
-./test/run-prolog-tests.sh
-
-# Datalog tests
-./test/run-datalog-tests.sh
-
-# Integration tests
-npm test
+        SAME UNDERLYING SYSTEM
+        Connected by epistemic metadata
 ```
 
-### Test Coverage
+### 3. Complete Traceability
 
-- **Scheme Core**: 1000+ unit tests
-- **Prolog Logic**: 50+ rule tests
-- **Datalog Queries**: 30+ query tests
-- **Integration**: 100+ end-to-end tests
-- **Web UI**: 200+ component tests
+Every concept links to:
+- Its **prerequisites** (what you need to understand first)
+- Its **implementations** (where it's coded)
+- Its **applications** (where it's used)
+- Its **foundations** (theoretical basis)
 
-## 📊 Performance
+### 4. Self-Validating
 
-Based on 90-day production deployment:
+The epistemic topology structure allows automated validation:
+- Are all prerequisites satisfied?
+- Do all links point to real documents?
+- Is the difficulty rating appropriate for the level?
+- Are reading time estimates reasonable?
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Nodes** | 15-75 (dynamic) | Tested up to 1000 |
-| **Events/sec** | 8,500 | Peak throughput |
-| **Latency** | 23ms avg | M-expr → S-expr → consensus |
-| **Consensus rate** | 97.2% | 1,795/1,847 proposals |
-| **Causal violations** | 0 | Perfect consistency |
-| **UK tracking** | 94% accuracy | vs. 12% direct |
-| **Uptime** | 99.97% | 7 syncs out of 230k |
+## 💡 Core Innovations
+
+### 1. Observable Epistemic Parameterization
+Tracking implicit knowledge (UK) using techniques from 3D computer vision.
+
+**Analogy:** Just as cameras need special math to see depth, distributed systems need special math to see implicit knowledge.
+
+**Implementation:** [Observable Parameterization](docs/foundational/observable-parameterization.md)
+
+### 2. Geometric Consensus
+Consensus thresholds derived from Platonic solids, not arbitrary rules.
+
+**Example:**
+- 4 nodes (tetrahedron) → 75% threshold
+- 8 nodes (cube) → 50% threshold
+- 12 nodes (icosahedron) → 25% threshold
+
+**Implementation:** [Geometric Consensus](docs/foundational/geometric-consensus.md)
+
+### 3. Rig-Based Causality
+Max-Plus algebra for irreversible causal flow using tropical semirings.
+
+**Analogy:** Time only moves forward; causality uses math that mirrors this.
+
+**Implementation:** [Max-Plus Algebra](docs/foundational/max-plus-algebra.md)
+
+### 4. Three-Language Integration
+Scheme (computation) + Prolog (logic) + Datalog (queries) working together.
+
+**Analogy:**
+- Scheme = the **doer** (executes)
+- Prolog = the **thinker** (proves)
+- Datalog = the **tracker** (monitors)
+
+**Implementation:** [Quick Start](docs/practical/quick-start.md)
+
+### 5. M/S-Expression Duality
+Commands (M-expressions) compile to events (S-expressions) for CQRS architecture.
+
+**Benefit:** Self-describing systems with complete audit trails.
+
+**Implementation:** [M/S-Expression Duality](docs/foundational/ms-expression-duality.md)
+
+## 📊 Project Status
+
+### Completeness
+
+| Component | Status | Documentation |
+|-----------|--------|---------------|
+| **Theoretical Foundation** | ✅ Complete | [Research Paper](DECENTRALIZED_AUTOMATON_NETWORK_LATTICE_PAPER.md) |
+| **Scheme Core** | ✅ Complete | [Scheme Implementation](docs/practical/scheme-core.md) |
+| **Prolog Rules** | ✅ Complete | [Prolog Logic](docs/practical/prolog-rules.md) |
+| **Datalog Queries** | ✅ Complete | [Datalog Queries](docs/practical/datalog-queries.md) |
+| **Web Interface** | ✅ Complete | [Web UI](web-ui/index.html) |
+| **Gateway Docs** | ✅ Complete | [Gateway](docs/gateway/INDEX.md) |
+| **Foundational Docs** | ✅ Complete | [Foundational](docs/foundational/INDEX.md) |
+| **Practical Docs** | ✅ Complete | [Practical](docs/practical/INDEX.md) |
+| **Applied Docs** | ✅ Complete | [Applied](docs/applied/INDEX.md) |
+| **Knowledge Graph** | ✅ Complete | [Visualization](docs/assets/knowledge-graph.html) |
+
+### Validation
+
+- ✅ All documents have epistemic front matter
+- ✅ All prerequisites are satisfied
+- ✅ All internal links are valid
+- ✅ Reading times are estimated
+- ✅ Difficulty ratings are assigned
+- ✅ Multiple entry points exist for all audiences
+- ✅ Learning paths are curated and complete
+
+## 🎯 Target Audiences
+
+### 👨‍💻 Software Engineers
+**What you get:** Production-ready consensus framework, API documentation, deployment guides
+**Start:** [Quick Start Guide](docs/practical/quick-start.md)
+
+### 🔬 Academic Researchers
+**What you get:** Novel theoretical unification, formal proofs, citations
+**Start:** [Research Paper](DECENTRALIZED_AUTOMATON_NETWORK_LATTICE_PAPER.md)
+
+### 🎓 Students & Learners
+**What you get:** Clear explanations, visual aids, progressive learning
+**Start:** [What is DANL?](docs/gateway/what-is-danl.md)
+
+### 👔 Technical Leaders
+**What you get:** Architecture patterns, case studies, ROI analysis
+**Start:** [Why This Matters](docs/gateway/why-it-matters.md)
+
+### 🌍 General Public
+**What you get:** Plain English, real-world analogies, big picture
+**Start:** [What is DANL?](docs/gateway/what-is-danl.md)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+This is an open, community-driven project. Contributions welcome!
 
-### Development Setup
+### How to Contribute
 
-```bash
-# Fork and clone
-git clone https://github.com/YOUR_USERNAME/danl.git
-cd danl
+1. **Add new documents** following the EpistemicNode structure
+2. **Improve existing explanations** at any level
+3. **Create new learning paths** for different audiences
+4. **Add visualizations** to make concepts clearer
+5. **Translate** documentation to other languages
+6. **Report issues** with documentation structure
 
-# Create feature branch
-git checkout -b feature/amazing-feature
+See [types/epistemic-node.ts](types/epistemic-node.ts) for the complete schema.
 
-# Make changes and test
-./test/run-all-tests.sh
+### Writing Guidelines
 
-# Commit and push
-git commit -m "Add amazing feature"
-git push origin feature/amazing-feature
-
-# Open Pull Request
-```
+- **Gateway level:** Assume zero prerequisites, use analogies, focus on "why"
+- **Foundational level:** Assume basic programming, explain concepts, focus on "what"
+- **Practical level:** Assume intermediate skills, show code, focus on "how"
+- **Applied level:** Assume production experience, show patterns, focus on "when"
 
 ## 📜 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+**MIT License** - Free for commercial and academic use
 
-```
-MIT License
+Copyright (c) 2025 Brian James Thorne
 
-Copyright (c) 2025 Brian James Thorne, Axiomatic Research Laboratory
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+See [LICENSE](LICENSE) for full text.
 
 ## 📞 Contact
 
-**Brian James Thorne**  
-Axiomatic Research Laboratory
-
-- **Email**: research@axiomatic-lab.org
-- **Website**: https://axiomatic-lab.org/danl
-- **GitHub**: https://github.com/axiomatic-research/danl
-- **Paper**: [Read the full research paper](DECENTRALIZED_AUTOMATON_NETWORK_LATTICE_PAPER.md)
+**Author:** Brian James Thorne  
+**Affiliation:** Axiomatic Research Laboratory  
+**Email:** bthornemail@gmail.com  
+**Repository:** https://github.com/bthornemail/epistemic-topology
 
 ## 🙏 Acknowledgments
 
-- **Computer Vision Community** - For 25+ years of observable parameterization research
-- **Scheme Community** - For homoiconicity and meta-circular evaluation
-- **Prolog Community** - For logic programming foundations
-- **Datalog Community** - For distributed query systems
-- **W3C** - For web standards and specifications
+This work unifies insights from:
+- Computer vision (observable parameterization)
+- Distributed systems (vector clocks, consensus)
+- Programming language theory (homoiconicity, combinators)
+- Algebraic geometry (Grothendieck schemes)
+- Logic programming (Prolog, Datalog)
+- Lattice theory (partial orders)
+- Tropical algebra (max-plus semirings)
+- Platonic geometry (consensus thresholds)
+
+Special thanks to the communities that developed these foundational concepts.
 
 ## 📚 Citation
 
-If you use DANL in your research, please cite:
+If you use this work in research, please cite:
 
 ```bibtex
-@article{thorne2025danl,
-  title={Decentralized Automaton Network Lattice: A Unified Framework for Geometric Consciousness Computing},
-  author={Thorne, Brian James and Claude},
-  journal={Axiomatic Research Laboratory},
+@misc{thorne2025epistemic,
+  title={Epistemic Topology: Decentralized Automaton Network Lattice},
+  author={Thorne, Brian James},
   year={2025},
-  url={https://github.com/axiomatic-research/danl}
+  publisher={GitHub},
+  url={https://github.com/bthornemail/epistemic-topology},
+  note={A complete framework for distributed consciousness computing}
 }
 ```
+
+## 🗺️ Roadmap
+
+### Completed ✅
+- Complete theoretical framework
+- Production implementation (Scheme, Prolog, Datalog)
+- Epistemic topology documentation structure
+- Interactive knowledge graph
+- Multiple learning paths
+- Validation framework
+
+### Next Steps 🚀
+- Multi-language translations
+- Video tutorials
+- Interactive examples in browser
+- Community contributions
+- Academic publication
+- Conference presentations
+
+---
+
+## Quick Reference Card
+
+| I want to... | Go here | Time |
+|-------------|---------|------|
+| **Understand the big picture** | [What is DANL?](docs/gateway/what-is-danl.md) | 5 min |
+| **See why it matters** | [Why This Matters](docs/gateway/why-it-matters.md) | 8 min |
+| **Learn the concepts** | [Foundational](docs/foundational/INDEX.md) | 2-4 hrs |
+| **Build something** | [Quick Start](docs/practical/quick-start.md) | 2 hrs |
+| **Deploy to production** | [Production Guide](docs/applied/production-architecture.md) | 1 day |
+| **Read the paper** | [Research Paper](DECENTRALIZED_AUTOMATON_NETWORK_LATTICE_PAPER.md) | 2-3 hrs |
+| **Explore visually** | [Knowledge Graph](docs/assets/knowledge-graph.html) | 15 min |
+| **Understand everything** | [Complete Index](docs/INDEX.md) | 15+ hrs |
 
 ---
 
 <p align="center">
-  <strong>Built with ❤️ by <a href="https://axiomatic-lab.org">Axiomatic Research Laboratory</a></strong>
+  <strong>Start Your Journey: <a href="docs/INDEX.md">Enter the Epistemic Topology</a></strong>
 </p>
 
 <p align="center">
-  <sub>© 2025 Brian James Thorne. All rights reserved.</sub>
+  <em>Making distributed consciousness computing accessible to everyone</em>
+</p>
+
+<p align="center">
+  <sub>© 2025 Brian James Thorne • MIT License • Made with ❤️ for the community</sub>
 </p>

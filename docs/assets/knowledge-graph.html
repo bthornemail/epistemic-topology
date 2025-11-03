@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANL Epistemic Topology - Interactive Knowledge Graph</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        #app {
+            display: flex;
+            height: 100vh;
+        }
+
+        #sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        #graph-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #graph {
+            width: 100%;
+            height: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #764ba2;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .filter-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .stats {
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .stat-label {
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .legend {
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(0,0,0,0.2);
+        }
+
+        .node-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .node-info.visible {
+            display: block;
+        }
+
+        .node-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .node-info .meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .node-info .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            background: #f0f4ff;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #667eea;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 320px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="sidebar">
+            <h1>Epistemic Topology</h1>
+            <div class="subtitle">Interactive Knowledge Graph</div>
+
+            <div class="search-box">
+                <input type="text" class="search-input" id="search" placeholder="Search nodes...">
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total Nodes:</span>
+                    <span class="stat-value" id="total-nodes">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Visible:</span>
+                    <span class="stat-value" id="visible-nodes">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Connections:</span>
+                    <span class="stat-value" id="total-links">0</span>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Level</span>
+                <div class="filter-buttons" id="level-filters">
+                    <button class="filter-btn active" data-level="all">All</button>
+                    <button class="filter-btn" data-level="gateway">Gateway</button>
+                    <button class="filter-btn" data-level="foundational">Foundational</button>
+                    <button class="filter-btn" data-level="practical">Practical</button>
+                    <button class="filter-btn" data-level="applied">Applied</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Type</span>
+                <div class="filter-buttons" id="type-filters">
+                    <button class="filter-btn active" data-type="all">All</button>
+                    <button class="filter-btn" data-type="navigation">Navigation</button>
+                    <button class="filter-btn" data-type="concept">Concept</button>
+                    <button class="filter-btn" data-type="implementation">Implementation</button>
+                    <button class="filter-btn" data-type="application">Application</button>
+                    <button class="filter-btn" data-type="guide">Guide</button>
+                </div>
+            </div>
+
+            <div class="legend">
+                <h2>Legend</h2>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #48bb78;"></div>
+                    <span>Gateway (Easy)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4299e1;"></div>
+                    <span>Foundational (Moderate)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ed8936;"></div>
+                    <span>Practical (Intermediate)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9f7aea;"></div>
+                    <span>Applied (Advanced)</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="graph-container">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <div>Loading Knowledge Graph...</div>
+            </div>
+            <svg id="graph"></svg>
+            <div class="node-info" id="node-info">
+                <button class="close-btn" onclick="hideNodeInfo()">×</button>
+                <h3 id="info-title"></h3>
+                <div class="meta" id="info-meta"></div>
+                <div id="info-description"></div>
+                <div class="tags" id="info-tags"></div>
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="resetZoom()">Reset View</button>
+                <button class="control-btn" onclick="centerGraph()">Center</button>
+                <button class="control-btn" onclick="exportGraph()">Export PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Sample data - in production, this would be loaded from the actual documents
+        const nodes = [
+            // Gateway nodes
+            { id: "what-is-danl", title: "What is DANL?", level: "gateway", type: "concept", difficulty: 1, readingTime: 5 },
+            { id: "why-it-matters", title: "Why Does This Matter?", level: "gateway", type: "concept", difficulty: 1, readingTime: 8 },
+            { id: "core-ideas-simple", title: "Core Ideas in Plain English", level: "gateway", type: "concept", difficulty: 1, readingTime: 10 },
+            { id: "epistemic-visual", title: "Visual Introduction", level: "gateway", type: "guide", difficulty: 1, readingTime: 7 },
+            
+            // Foundational nodes
+            { id: "epistemic-states", title: "Epistemic States", level: "foundational", type: "concept", difficulty: 2, readingTime: 20 },
+            { id: "lattice-theory", title: "Lattice Theory", level: "foundational", type: "concept", difficulty: 3, readingTime: 25 },
+            { id: "observable-param", title: "Observable Parameterization", level: "foundational", type: "concept", difficulty: 3, readingTime: 30 },
+            { id: "max-plus-algebra", title: "Max-Plus Algebra", level: "foundational", type: "concept", difficulty: 4, readingTime: 40 },
+            { id: "geometric-consensus", title: "Geometric Consensus", level: "foundational", type: "concept", difficulty: 3, readingTime: 35 },
+            
+            // Practical nodes
+            { id: "quick-start", title: "Quick Start Guide", level: "practical", type: "guide", difficulty: 2, readingTime: 30 },
+            { id: "scheme-core", title: "Scheme Implementation", level: "practical", type: "implementation", difficulty: 4, readingTime: 45 },
+            { id: "prolog-rules", title: "Prolog Logic Rules", level: "practical", type: "implementation", difficulty: 4, readingTime: 40 },
+            { id: "datalog-queries", title: "Datalog Queries", level: "practical", type: "implementation", difficulty: 4, readingTime: 35 },
+            { id: "api-reference", title: "API Reference", level: "practical", type: "guide", difficulty: 3, readingTime: 30 },
+            
+            // Applied nodes
+            { id: "production-arch", title: "Production Architecture", level: "applied", type: "application", difficulty: 4, readingTime: 20 },
+            { id: "case-study", title: "Case Study: Consensus", level: "applied", type: "application", difficulty: 3, readingTime: 15 },
+            { id: "integration-patterns", title: "Integration Patterns", level: "applied", type: "application", difficulty: 4, readingTime: 35 },
+        ];
+
+        const links = [
+            // Gateway progression
+            { source: "what-is-danl", target: "why-it-matters", type: "enables" },
+            { source: "why-it-matters", target: "core-ideas-simple", type: "enables" },
+            { source: "what-is-danl", target: "epistemic-visual", type: "enables" },
+            
+            // Gateway to Foundational
+            { source: "core-ideas-simple", target: "epistemic-states", type: "enables" },
+            { source: "core-ideas-simple", target: "lattice-theory", type: "enables" },
+            { source: "epistemic-visual", target: "epistemic-states", type: "enables" },
+            
+            // Foundational relationships
+            { source: "epistemic-states", target: "observable-param", type: "enables" },
+            { source: "lattice-theory", target: "geometric-consensus", type: "enables" },
+            { source: "lattice-theory", target: "max-plus-algebra", type: "related" },
+            
+            // Foundational to Practical
+            { source: "epistemic-states", target: "quick-start", type: "enables" },
+            { source: "observable-param", target: "scheme-core", type: "enables" },
+            { source: "geometric-consensus", target: "prolog-rules", type: "enables" },
+            { source: "lattice-theory", target: "datalog-queries", type: "enables" },
+            
+            // Practical progression
+            { source: "quick-start", target: "scheme-core", type: "enables" },
+            { source: "scheme-core", target: "prolog-rules", type: "related" },
+            { source: "prolog-rules", target: "datalog-queries", type: "related" },
+            { source: "scheme-core", target: "api-reference", type: "enables" },
+            
+            // Practical to Applied
+            { source: "api-reference", target: "production-arch", type: "enables" },
+            { source: "scheme-core", target: "case-study", type: "enables" },
+            { source: "production-arch", target: "integration-patterns", type: "enables" },
+        ];
+
+        const levelColors = {
+            gateway: "#48bb78",
+            foundational: "#4299e1",
+            practical: "#ed8936",
+            applied: "#9f7aea"
+        };
+
+        let activeFilters = {
+            level: "all",
+            type: "all"
+        };
+
+        let simulation, svg, nodeElements, linkElements, labelElements;
+
+        function initGraph() {
+            const width = window.innerWidth - 300;
+            const height = window.innerHeight;
+
+            svg = d3.select("#graph")
+                .attr("width", width)
+                .attr("height", height)
+                .call(d3.zoom().on("zoom", (event) => {
+                    svg.select("g").attr("transform", event.transform);
+                }))
+                .append("g");
+
+            // Arrow markers
+            svg.append("defs").selectAll("marker")
+                .data(["enables", "related"])
+                .join("marker")
+                .attr("id", d => `arrow-${d}`)
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 20)
+                .attr("refY", 0)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("fill", d => d === "enables" ? "#667eea" : "#999")
+                .attr("d", "M0,-5L10,0L0,5");
+
+            simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(40));
+
+            updateGraph();
+
+            document.querySelector(".loading").style.display = "none";
+        }
+
+        function updateGraph() {
+            const filtered = getFilteredData();
+
+            // Links
+            linkElements = svg.selectAll(".link")
+                .data(filtered.links)
+                .join("line")
+                .attr("class", "link")
+                .attr("stroke", d => d.type === "enables" ? "#667eea" : "#999")
+                .attr("stroke-width", 2)
+                .attr("stroke-opacity", 0.6)
+                .attr("marker-end", d => `url(#arrow-${d.type})`);
+
+            // Nodes
+            nodeElements = svg.selectAll(".node")
+                .data(filtered.nodes)
+                .join("circle")
+                .attr("class", "node")
+                .attr("r", d => 10 + d.difficulty * 2)
+                .attr("fill", d => levelColors[d.level])
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2)
+                .style("cursor", "pointer")
+                .call(drag(simulation))
+                .on("click", showNodeInfo)
+                .on("mouseover", function() {
+                    d3.select(this).attr("r", d => 12 + d.difficulty * 2);
+                })
+                .on("mouseout", function() {
+                    d3.select(this).attr("r", d => 10 + d.difficulty * 2);
+                });
+
+            // Labels
+            labelElements = svg.selectAll(".label")
+                .data(filtered.nodes)
+                .join("text")
+                .attr("class", "label")
+                .attr("text-anchor", "middle")
+                .attr("dy", -15)
+                .attr("font-size", "12px")
+                .attr("fill", "#333")
+                .attr("font-weight", "600")
+                .text(d => d.title)
+                .style("pointer-events", "none");
+
+            simulation.nodes(filtered.nodes);
+            simulation.force("link").links(filtered.links);
+            simulation.alpha(1).restart();
+
+            simulation.on("tick", () => {
+                linkElements
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                nodeElements
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                labelElements
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+
+            updateStats(filtered);
+        }
+
+        function getFilteredData() {
+            let filteredNodes = nodes;
+            let filteredLinks = links;
+
+            if (activeFilters.level !== "all") {
+                filteredNodes = filteredNodes.filter(n => n.level === activeFilters.level);
+            }
+
+            if (activeFilters.type !== "all") {
+                filteredNodes = filteredNodes.filter(n => n.type === activeFilters.type);
+            }
+
+            const nodeIds = new Set(filteredNodes.map(n => n.id));
+            filteredLinks = filteredLinks.filter(l => 
+                nodeIds.has(l.source.id || l.source) && 
+                nodeIds.has(l.target.id || l.target)
+            );
+
+            return { nodes: filteredNodes, links: filteredLinks };
+        }
+
+        function updateStats(data) {
+            document.getElementById("total-nodes").textContent = nodes.length;
+            document.getElementById("visible-nodes").textContent = data.nodes.length;
+            document.getElementById("total-links").textContent = data.links.length;
+        }
+
+        function showNodeInfo(event, d) {
+            const info = document.getElementById("node-info");
+            document.getElementById("info-title").textContent = d.title;
+            document.getElementById("info-meta").textContent = 
+                `${d.level} • ${d.type} • ${d.readingTime} min • Difficulty: ${d.difficulty}/5`;
+            document.getElementById("info-description").textContent = 
+                `Click to open the full document for "${d.title}"`;
+            info.classList.add("visible");
+        }
+
+        function hideNodeInfo() {
+            document.getElementById("node-info").classList.remove("visible");
+        }
+
+        function setupFilters() {
+            document.querySelectorAll("#level-filters .filter-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    document.querySelectorAll("#level-filters .filter-btn").forEach(b => b.classList.remove("active"));
+                    this.classList.add("active");
+                    activeFilters.level = this.dataset.level;
+                    updateGraph();
+                });
+            });
+
+            document.querySelectorAll("#type-filters .filter-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    document.querySelectorAll("#type-filters .filter-btn").forEach(b => b.classList.remove("active"));
+                    this.classList.add("active");
+                    activeFilters.type = this.dataset.type;
+                    updateGraph();
+                });
+            });
+
+            document.getElementById("search").addEventListener("input", function(e) {
+                const query = e.target.value.toLowerCase();
+                if (query) {
+                    nodeElements.attr("opacity", d => 
+                        d.title.toLowerCase().includes(query) || d.id.includes(query) ? 1 : 0.2
+                    );
+                } else {
+                    nodeElements.attr("opacity", 1);
+                }
+            });
+        }
+
+        function drag(simulation) {
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+        }
+
+        function resetZoom() {
+            svg.transition().duration(750).attr("transform", d3.zoomIdentity);
+        }
+
+        function centerGraph() {
+            const width = window.innerWidth - 300;
+            const height = window.innerHeight;
+            simulation.force("center", d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(1).restart();
+        }
+
+        function exportGraph() {
+            // Simple export - in production would generate actual PNG
+            alert("Export functionality would generate a PNG of the current graph view");
+        }
+
+        // Initialize
+        document.addEventListener("DOMContentLoaded", () => {
+            initGraph();
+            setupFilters();
+        });
+    </script>
+</body>
+</html>

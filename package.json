@@ -1,0 +1,28 @@
+{
+  "name": "epistemic-topology",
+  "version": "1.0.0",
+  "description": "Decentralized Automaton Network Lattice with Epistemic Topology",
+  "main": "index.js",
+  "scripts": {
+    "validate": "node tools/validate-epistemic-topology.js",
+    "validate:docs": "node tools/validate-epistemic-topology.js docs"
+  },
+  "keywords": [
+    "distributed-systems",
+    "consensus",
+    "lattice-theory",
+    "epistemic-logic",
+    "scheme",
+    "prolog",
+    "datalog"
+  ],
+  "author": "Brian James Thorne",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bthornemail/epistemic-topology.git"
+  }
+}
