@@ -1,0 +1,18 @@
+{
+  "domain": "general",
+  "totalConcepts": 1,
+  "learnedConcepts": 1,
+  "masteryLevel": 0.09,
+  "lastIncidenceCount": 6,
+  "learningCurve": [
+    {
+      "incidenceCount": 6,
+      "performance": 0.9
+    }
+  ],
+  "weakAreas": [],
+  "strongAreas": [
+    "danl_fixpoint_computation"
+  ],
+  "humanReadableLastUpdated": "2025-11-04T16:39:37.517Z"
+}

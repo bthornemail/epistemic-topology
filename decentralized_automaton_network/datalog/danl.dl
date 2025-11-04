@@ -1,0 +1,218 @@
+// ========================================
+// DANL Datalog: Network Propagation Layer
+// ========================================
+// Decentralized Automaton Network Lattice - Datalog Propagation
+// Authors: Brian James Thorne, Claude (Anthropic)
+// Version: 1.0
+// License: MIT
+// ========================================
+//
+// This Datalog program computes the eventual lattice state per node using
+// max-aggregators over neighbor indices, mirroring the Scheme simulator's
+// iteration but in a purely declarative, monotone fragment.
+// ========================================
+
+// ========================================
+// DECLARATIONS
+// ========================================
+
+.decl node(Node: symbol, InitialState: symbol)
+.decl neighbor(Node: symbol, Neighbor: symbol)
+.decl transition_type(Node: symbol, Type: symbol)
+.decl tau_coefficient(Node: symbol, Coeff: number)
+.decl attribute(Node: symbol, Attr: symbol, Value: symbol)
+
+// Lattice level indices
+.decl level_index(Level: symbol, Index: number)
+
+// Network state at each iteration
+.decl state(Node: symbol, Iteration: number, Level: symbol)
+
+// Stable state (fixpoint)
+.decl stable(Node: symbol, Level: symbol)
+
+// Edge justification (provenance)
+.decl edge_justification(Node: symbol, Neighbor: symbol, JoinLevel: symbol)
+
+// ========================================
+// INPUT FACTS
+// ========================================
+
+// Lattice level indices
+level_index("bottom", 0).
+level_index("potential", 1).
+level_index("active", 2).
+level_index("confident", 3).
+level_index("top", 4).
+
+// Example network nodes
+node("perceptual_array", "potential").
+node("inference_engine", "active").
+node("consensus_forum", "potential").
+
+// Neighbor relationships
+neighbor("perceptual_array", "inference_engine").
+neighbor("inference_engine", "perceptual_array").
+neighbor("inference_engine", "consensus_forum").
+neighbor("consensus_forum", "inference_engine").
+
+// Transition types
+transition_type("perceptual_array", "propagate_belief").
+transition_type("inference_engine", "interpret_evidence").
+transition_type("consensus_forum", "safeguard_consensus").
+
+// Tau coefficients (multiplied by 100 for integer representation)
+tau_coefficient("perceptual_array", 125).
+tau_coefficient("inference_engine", 150).
+tau_coefficient("consensus_forum", 90).
+
+// Attributes
+attribute("perceptual_array", "ceiling", "confident").
+attribute("inference_engine", "floor", "potential").
+attribute("consensus_forum", "ceiling", "confident").
+attribute("consensus_forum", "floor", "potential").
+
+// ========================================
+// LATTICE OPERATIONS
+// ========================================
+
+// Level join: returns higher index level
+.decl level_join_result(Level1: symbol, Level2: symbol, Result: symbol)
+level_join_result(L1, L2, L1) :-
+    level_index(L1, I1),
+    level_index(L2, I2),
+    I1 >= I2.
+level_join_result(L1, L2, L2) :-
+    level_index(L1, I1),
+    level_index(L2, I2),
+    I1 < I2.
+
+// Level meet: returns lower index level
+.decl level_meet_result(Level1: symbol, Level2: symbol, Result: symbol)
+level_meet_result(L1, L2, L1) :-
+    level_index(L1, I1),
+    level_index(L2, I2),
+    I1 <= I2.
+level_meet_result(L1, L2, L2) :-
+    level_index(L1, I1),
+    level_index(L2, I2),
+    I1 > I2.
+
+// ========================================
+// INITIAL STATE
+// ========================================
+
+// Initial state at iteration 0
+state(Node, 0, Level) :-
+    node(Node, Level).
+
+// ========================================
+// NEIGHBOR AGGREGATION
+// ========================================
+
+// Neighbor states at each iteration
+.decl neighbor_state(Node: symbol, Iteration: number, Neighbor: symbol, Level: symbol)
+neighbor_state(Node, Iter, Neighbor, Level) :-
+    neighbor(Node, Neighbor),
+    state(Neighbor, Iter, Level).
+
+// Neighbor join (max-aggregator over neighbor levels)
+// Use neighbor_state relation which already exists
+.decl neighbor_join(Node: symbol, Iteration: number, JoinLevel: symbol)
+neighbor_join(Node, Iter, JoinLevel) :-
+    neighbor(Node, _),
+    MaxIdx = max Idx : neighbor_state(Node, Iter, Neighbor, Level), level_index(Level, Idx),
+    level_index(JoinLevel, MaxIdx).
+
+// ========================================
+// TRANSITION RULES
+// ========================================
+
+// propagate-belief: join(self, neighbor-join)
+state(Node, Iter + 1, Result) :-
+    state(Node, Iter, Self),
+    transition_type(Node, "propagate_belief"),
+    neighbor_join(Node, Iter, NeighborJoin),
+    level_join_result(Self, NeighborJoin, Result).
+
+// interpret-evidence: blend(self, neighbor-join, weight)
+// For simplicity, using join here (blending would require weighted average)
+.decl neighbor_count(Node: symbol, Count: number)
+neighbor_count(Node, Count) :-
+    neighbor(Node, _),
+    Count = count : neighbor(Node, _).
+
+state(Node, Iter + 1, Result) :-
+    state(Node, Iter, Self),
+    transition_type(Node, "interpret_evidence"),
+    neighbor_join(Node, Iter, NeighborJoin),
+    level_join_result(Self, NeighborJoin, Result).  // Simplified: actual blending would use tau
+
+// safeguard-consensus: meet(ceiling, join(self, neighbor-join))
+.decl candidate_level(Node: symbol, Iteration: number, Candidate: symbol)
+candidate_level(Node, Iter, Candidate) :-
+    state(Node, Iter, Self),
+    neighbor_join(Node, Iter, NeighborJoin),
+    level_join_result(Self, NeighborJoin, Candidate).
+
+state(Node, Iter + 1, Result) :-
+    candidate_level(Node, Iter, Candidate),
+    transition_type(Node, "safeguard_consensus"),
+    attribute(Node, "ceiling", Ceiling),
+    level_meet_result(Candidate, Ceiling, Result).
+
+// Apply floor constraint if present - fixed iteration reference
+.decl state_temp(Node: symbol, Iteration: number, Level: symbol)
+state_temp(Node, Iter, Result) :-
+    state(Node, Iter, Result),
+    transition_type(Node, "safeguard_consensus"),
+    !attribute(Node, "floor", _).
+
+state(Node, Iter, FinalResult) :-
+    state_temp(Node, Iter, Result),
+    transition_type(Node, "safeguard_consensus"),
+    attribute(Node, "floor", Floor),
+    level_join_result(Floor, Result, FinalResult).
+
+// Default: state propagates if no transition applies
+// Simplified: just ensure all nodes have a state at each iteration
+state(Node, Iter + 1, Level) :-
+    state(Node, Iter, Level),
+    !transition_type(Node, "propagate_belief"),
+    !transition_type(Node, "interpret_evidence"),
+    !transition_type(Node, "safeguard_consensus").
+
+// ========================================
+// FIXPOINT DETECTION
+// ========================================
+
+// State changed between iterations
+.decl state_changed(Node: symbol, Iteration: number)
+state_changed(Node, Iter) :-
+    state(Node, Iter, Level1),
+    state(Node, Iter + 1, Level2),
+    Level1 != Level2.
+
+// Stable state: no change from previous iteration
+stable(Node, Level) :-
+    state(Node, Iter, Level),
+    !state_changed(Node, Iter),
+    !state_changed(Node, Iter + 1).  // Also stable in next iteration
+
+// ========================================
+// PROVENANCE / EDGE JUSTIFICATION
+// ========================================
+
+// Edge justification: shows which neighbor join level contributed
+edge_justification(Node, Neighbor, JoinLevel) :-
+    neighbor(Node, Neighbor),
+    stable(Node, _),
+    MaxIter = max i : neighbor_join(Node, i, _),
+    neighbor_join(Node, MaxIter, JoinLevel).
+
+// ========================================
+// OUTPUT
+// ========================================
+
+.output stable(IO=stdout)
+.output edge_justification(IO=stdout)

@@ -1,0 +1,67 @@
+{
+  "lattice": {
+    "levels": [
+      {"name": "bottom", "index": 0},
+      {"name": "potential", "index": 1},
+      {"name": "active", "index": 2},
+      {"name": "confident", "index": 3},
+      {"name": "top", "index": 4}
+    ],
+    "join_table": {
+      "bottom": {"bottom": "bottom", "potential": "potential", "active": "active", "confident": "confident", "top": "top"},
+      "potential": {"bottom": "potential", "potential": "potential", "active": "active", "confident": "confident", "top": "top"},
+      "active": {"bottom": "active", "potential": "active", "active": "active", "confident": "confident", "top": "top"},
+      "confident": {"bottom": "confident", "potential": "confident", "active": "confident", "confident": "confident", "top": "top"},
+      "top": {"bottom": "top", "potential": "top", "active": "top", "confident": "top", "top": "top"}
+    },
+    "meet_table": {
+      "bottom": {"bottom": "bottom", "potential": "bottom", "active": "bottom", "confident": "bottom", "top": "bottom"},
+      "potential": {"bottom": "bottom", "potential": "potential", "active": "potential", "confident": "potential", "top": "potential"},
+      "active": {"bottom": "bottom", "potential": "potential", "active": "active", "confident": "active", "top": "active"},
+      "confident": {"bottom": "bottom", "potential": "potential", "active": "active", "confident": "confident", "top": "confident"},
+      "top": {"bottom": "bottom", "potential": "potential", "active": "active", "confident": "confident", "top": "top"}
+    }
+  },
+  "ms_descriptors": {
+    "propagate-belief": {
+      "meta": "propagate-belief self neighbors -> join self (fold join neighbors)",
+      "description": "Propagates belief by joining current state with neighbor join"
+    },
+    "interpret-evidence": {
+      "meta": "interpret-evidence self neighbors tau -> blend self neighbor-join",
+      "description": "Blends current state with neighbor join using tau-weighted blending"
+    },
+    "safeguard-consensus": {
+      "meta": "safeguard-consensus self neighbors -> meet ceiling (join self neighbor-join)",
+      "description": "Safeguards consensus by meeting join result with ceiling constraint"
+    }
+  },
+  "example_network": {
+    "nodes": [
+      {
+        "name": "perceptual-array",
+        "initial_state": "potential",
+        "transition": "propagate-belief",
+        "neighbors": ["inference-engine"],
+        "tau_coefficient": 1.25,
+        "attributes": {"ceiling": "confident"}
+      },
+      {
+        "name": "inference-engine",
+        "initial_state": "active",
+        "transition": "interpret-evidence",
+        "neighbors": ["perceptual-array", "consensus-forum"],
+        "tau_coefficient": 1.5,
+        "attributes": {"floor": "potential"}
+      },
+      {
+        "name": "consensus-forum",
+        "initial_state": "potential",
+        "transition": "safeguard-consensus",
+        "neighbors": ["inference-engine"],
+        "tau_coefficient": 0.9,
+        "attributes": {"ceiling": "confident", "floor": "potential"}
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "domain": "general",
+  "totalConcepts": 4,
+  "learnedConcepts": 4,
+  "masteryLevel": 0.35,
+  "lastIncidenceCount": 9,
+  "learningCurve": [
+    {
+      "incidenceCount": 3,
+      "performance": 0.9
+    },
+    {
+      "incidenceCount": 5,
+      "performance": 0.95
+    },
+    {
+      "incidenceCount": 7,
+      "performance": 0.85
+    },
+    {
+      "incidenceCount": 9,
+      "performance": 0.8
+    }
+  ],
+  "weakAreas": [],
+  "strongAreas": [
+    "danl_lattice_structure",
+    "danl_fixpoint_combinators",
+    "danl_ms_expression_duality"
+  ],
+  "humanReadableLastUpdated": "2025-11-04T17:00:19.608Z"
+}

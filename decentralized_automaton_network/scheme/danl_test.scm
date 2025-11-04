@@ -197,7 +197,7 @@
                             (cons 'observables (network-observables network)))))
           (loop (cdr remaining)
                 (+ step 1)
-                (cons frame acc))))))
+                (cons frame acc)))))
 
 ;;; JSON trace export for cross-language validation
 (define (network-to-json node)
@@ -325,4 +325,4 @@
 (define (export-example-trace-json)
   (export-trace-json (cdr (assoc 'history example-run))))
 
-;;; End of DANL Scheme orchestrator ---------------------------------------------
+;;; End of DANL Scheme orchestrator ---------------------------------------------)

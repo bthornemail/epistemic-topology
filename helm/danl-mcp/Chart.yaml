@@ -1,0 +1,30 @@
+apiVersion: v2
+name: danl-mcp
+description: A Helm chart for DANL MCP Server - Decentralized Automaton Network Lattice
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - danl
+  - mcp
+  - lattice
+  - distributed-systems
+  - consensus
+  - epistemic-topology
+
+home: https://github.com/epistemic-topology/epistemic-topology
+sources:
+  - https://github.com/epistemic-topology/epistemic-topology
+
+maintainers:
+  - name: Epistemic Topology Project
+    email: maintainers@epistemic-topology.io
+
+icon: https://epistemic-topology.io/assets/logo.png
+
+dependencies: []
+
+annotations:
+  category: DistributedSystems
+  license: MIT

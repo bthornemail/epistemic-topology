@@ -1,0 +1,16 @@
+{
+  "domain": "neural_networks",
+  "totalConcepts": 1,
+  "learnedConcepts": 1,
+  "masteryLevel": 0.08,
+  "lastIncidenceCount": 3,
+  "learningCurve": [
+    {
+      "incidenceCount": 3,
+      "performance": 0.8
+    }
+  ],
+  "weakAreas": [],
+  "strongAreas": [],
+  "humanReadableLastUpdated": "2025-11-04T16:39:05.760Z"
+}

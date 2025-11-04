@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: danl-mcp-config
+  namespace: epistemic-topology
+  labels:
+    app: danl-mcp
+    component: configuration
+data:
+  # DANL MCP Server Configuration
+  DANL_PORT: "3000"
+  DANL_HOST: "0.0.0.0"
+  SCHEME_INTERPRETER: "guile"
+  DANL_SCHEME_PATH: "/app/scheme/danl.scm"
+  DANL_PERSISTENCE_PATH: "/app/persistence/danl"
+
+  # HD Addressing
+  HD_ADDRESS: "m/0x44414E4C'/0x00000001'/0'/0/0"
+  RPC_ENDPOINT: "tcp://danl-mcp-service:3000/danl/base/0"
+
+  # Performance
+  MAX_CONCURRENT_SIMULATIONS: "5"
+  SIMULATION_TIMEOUT: "30000"
+
+  # Node.js
+  NODE_ENV: "production"
+
+  # Lattice specification
+  lattice.json: |
+    {
+      "levels": [
+        {"name": "bottom", "index": 0},
+        {"name": "potential", "index": 1},
+        {"name": "active", "index": 2},
+        {"name": "confident", "index": 3},
+        {"name": "top", "index": 4}
+      ],
+      "operations": {
+        "join": {"symbol": "∨", "description": "Maximum"},
+        "meet": {"symbol": "∧", "description": "Minimum"}
+      }
+    }

@@ -1,0 +1,179 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: danl-mcp
+  namespace: epistemic-topology
+  labels:
+    app: danl-mcp
+    component: server
+    version: v1.0.0
+    hd-address: "m-0x44414E4C"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: danl-mcp
+      component: server
+  template:
+    metadata:
+      labels:
+        app: danl-mcp
+        component: server
+        version: v1.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: danl-mcp-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+
+      # Init container to prepare scheme code
+      initContainers:
+        - name: prepare-scheme
+          image: busybox:latest
+          command: ['sh', '-c', 'cp -r /scheme-source/* /scheme-target/']
+          volumeMounts:
+            - name: scheme-source
+              mountPath: /scheme-source
+              readOnly: true
+            - name: scheme-code
+              mountPath: /scheme-target
+
+      containers:
+        - name: danl-mcp
+          image: epistemic-topology/danl-mcp:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: danl-mcp-config
+                  key: NODE_ENV
+            - name: DANL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: danl-mcp-config
+                  key: DANL_PORT
+            - name: DANL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: danl-mcp-config
+                  key: DANL_HOST
+            - name: SCHEME_INTERPRETER
+              valueFrom:
+                configMapKeyRef:
+                  name: danl-mcp-config
+                  key: SCHEME_INTERPRETER
+            - name: DANL_SCHEME_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: danl-mcp-config
+                  key: DANL_SCHEME_PATH
+            - name: DANL_PERSISTENCE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: danl-mcp-config
+                  key: DANL_PERSISTENCE_PATH
+            - name: HD_MASTER_SEED
+              valueFrom:
+                secretKeyRef:
+                  name: danl-mcp-secrets
+                  key: HD_MASTER_SEED
+
+          volumeMounts:
+            - name: danl-persistence
+              mountPath: /app/persistence/danl
+            - name: scheme-code
+              mountPath: /app/scheme
+              readOnly: true
+            - name: lattice-config
+              mountPath: /app/config/lattice.json
+              subPath: lattice.json
+              readOnly: true
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+      volumes:
+        - name: danl-persistence
+          persistentVolumeClaim:
+            claimName: danl-persistence-pvc
+        - name: scheme-source
+          persistentVolumeClaim:
+            claimName: scheme-code-pvc
+        - name: scheme-code
+          emptyDir: {}
+        - name: lattice-config
+          configMap:
+            name: danl-mcp-config
+            items:
+              - key: lattice.json
+                path: lattice.json
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - danl-mcp
+                topologyKey: kubernetes.io/hostname
+
+      terminationGracePeriodSeconds: 30

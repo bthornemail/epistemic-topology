@@ -1,0 +1,168 @@
+# Docker Compose for Epistemic Topology
+# Local development multi-service deployment
+
+version: '3.8'
+
+services:
+  # DANL MCP Server
+  danl-mcp:
+    build:
+      context: ./mcp-servers/danl
+      dockerfile: Dockerfile
+    image: epistemic-topology/danl-mcp:latest
+    container_name: danl-mcp-server
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DANL_PORT=3000
+      - DANL_HOST=0.0.0.0
+      - SCHEME_INTERPRETER=guile
+      - DANL_SCHEME_PATH=/app/scheme/danl.scm
+      - DANL_PERSISTENCE_PATH=/app/persistence/danl
+    volumes:
+      - danl-persistence:/app/persistence/danl
+      - ./decentralized_automaton_network/scheme:/app/scheme:ro
+    restart: unless-stopped
+    networks:
+      - epistemic-net
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "epistemic.service=danl-mcp"
+      - "epistemic.version=1.0.0"
+      - "epistemic.hd-address=m/0x44414E4C'/0x00000001'/0'/0/0"
+
+  # H2GNN MCP Server (placeholder - would need implementation)
+  h2gnn-mcp:
+    image: epistemic-topology/h2gnn-mcp:latest
+    container_name: h2gnn-mcp-server
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - H2GNN_PORT=3001
+      - EMBEDDING_DIM=128
+      - NUM_LAYERS=4
+      - CURVATURE=-1
+    volumes:
+      - h2gnn-persistence:/app/persistence
+    restart: unless-stopped
+    networks:
+      - epistemic-net
+    profiles:
+      - full  # Only start with --profile full
+    labels:
+      - "epistemic.service=h2gnn-mcp"
+      - "epistemic.hd-address=m/0x4852474E'/0x00000001'/0'/1/0"
+
+  # CST MCP Server (placeholder - would need implementation)
+  cst-mcp:
+    image: epistemic-topology/cst-mcp:latest
+    container_name: cst-mcp-server
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - CST_PORT=3002
+    volumes:
+      - cst-data:/app/data
+    restart: unless-stopped
+    networks:
+      - epistemic-net
+    profiles:
+      - full  # Only start with --profile full
+    labels:
+      - "epistemic.service=cst-mcp"
+      - "epistemic.hd-address=m/0x43535448'/0x00000001'/0'/0/0"
+
+  # Redis for distributed caching and pub/sub
+  redis:
+    image: redis:7-alpine
+    container_name: epistemic-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    networks:
+      - epistemic-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    labels:
+      - "epistemic.service=redis"
+
+  # PostgreSQL for persistence (optional)
+  postgres:
+    image: postgres:15-alpine
+    container_name: epistemic-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=epistemic_topology
+      - POSTGRES_USER=epistemic
+      - POSTGRES_PASSWORD=changeme123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - epistemic-net
+    profiles:
+      - full
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U epistemic"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    labels:
+      - "epistemic.service=postgres"
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: epistemic-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - nginx-cache:/var/cache/nginx
+    depends_on:
+      - danl-mcp
+    restart: unless-stopped
+    networks:
+      - epistemic-net
+    profiles:
+      - full
+    labels:
+      - "epistemic.service=nginx"
+
+networks:
+  epistemic-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  danl-persistence:
+    driver: local
+  h2gnn-persistence:
+    driver: local
+  cst-data:
+    driver: local
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  nginx-cache:
+    driver: local
