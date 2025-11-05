@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>In-Memory Manifold — WebRTC + Mosquitto + JSONL</title>
+  <style>
+    body { margin: 0; font-family: 'Courier New', monospace; background: #000; color: #0f0; }
+    #container { display: flex; height: 100vh; }
+    #left { width: 40%; padding: 20px; overflow-y: auto; }
+    #right { width: 60%; background: #111; }
+    .panel { background: #222; border: 1px solid #0f0; margin-bottom: 15px; padding: 15px; border-radius: 5px; }
+    h2 { color: #4ecdc4; margin: 0 0 10px 0; }
+    button { background: #333; color: #0f0; border: 1px solid #0f0; padding: 8px 12px; margin: 5px; border-radius: 3px; cursor: pointer; }
+    button:hover { background: #0f0; color: #000; }
+    input { background: #000; color: #0f0; border: 1px solid #0f0; padding: 8px; width: 100%; margin: 5px 0; }
+    #output { height: 200px; overflow-y: auto; background: #000; padding: 10px; border-radius: 3px; font-size: 0.9em; }
+    #peer-list { list-style: none; padding: 0; }
+    #peer-list li { padding: 5px; border-bottom: 1px solid #333; }
+    #log { height: 300px; overflow-y: auto; background: #000; padding: 10px; border-radius: 3px; font-size: 0.8em; white-space: pre-wrap; }
+    /* Added some styles from the consumer app for better readability */
+    #r5rs-output {
+        background: #000; padding: 8px; border-radius: 4px; 
+        font-size: 0.85em; max-height: 100px; overflow-y: auto;
+        border: 1px solid #333;
+    }
+    #jsonl-log {
+        height: 100px; background: #000; color: #0f0; 
+        border: 1px solid #333; border-radius: 4px;
+        width: 100%; font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="left">
+      <div class="panel">
+        <h2>In-Memory Manifold</h2>
+        <button id="generateUniverse">Spawn Universe</button>
+        <button id="syncPeers">Sync Peers</button>
+        <input id="peerIdInput" placeholder="Enter peer ID to connect">
+        <button id="connectPeer">Connect</button>
+        <ul id="peer-list"></ul>
+      </div>
+      <div class="panel">
+        <h2>R5RS Clause</h2>
+        <pre id="r5rs-output"></pre>
+      </div>
+      <div class="panel">
+        <h2>JSONL Log</h2>
+        <textarea id="jsonl-log" readonly></textarea>
+        <button id="exportJSONL">Export JSONL</button>
+      </div>
+      <div class="panel">
+        <h2>Console</h2>
+        <div id="output"></div>
+      </div>
+    </div>
+    <div id="right">
+      <div id="log">Manifold State (In-Memory):<br>Universes: 0<br>Peers: 0<br>JSONL Lines: 0<br></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+
+  <script>
+    // === IN-MEMORY STATE ===
+    let universes = []; // { id, ramification, clause, timestamp }
+    let peers = new Map(); // peerId → Peer connection
+    let jsonlLog = []; // Array of JSONL strings
+    let universeId = 0;
+    let myPeerId = `peer_${Math.random().toString(36).slice(2)}`;
+
+    // Mosquitto (MQTT) - uses public broker
+    const mqttClient = mqtt.connect('wss://test.mosquitto.org:8081');
+
+    // === DOM Elements ===
+    const outputEl = document.getElementById('output');
+    const logEl = document.getElementById('log');
+    const jsonlLogEl = document.getElementById('jsonl-log');
+    const r5rsOutputEl = document.getElementById('r5rs-output');
+
+    // === LOGGING ===
+    const log = (msg) => {
+      const entry = `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
+      logEl.innerHTML += entry;
+      logEl.scrollTop = logEl.scrollHeight;
+      
+      const consoleEntry = `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+      outputEl.innerHTML = consoleEntry + outputEl.innerHTML;
+      console.log(msg);
+    };
+
+    const addToJSONL = (entry) => {
+      const line = JSON.stringify(entry) + '\n';
+      jsonlLog.push(line);
+      jsonlLogEl.value += line;
+      jsonlLogEl.scrollTop = jsonlLogEl.scrollHeight;
+    };
+
+    // === FIX: Added missing loadWordNet function ===
+    let wordnet = {};
+    const loadWordNet = async () => {
+      try {
+        const resp = await fetch('https://raw.githubusercontent.com/grok-patterns/wordnet-mini/main/wordnet-mini.json');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        wordnet = await resp.json();
+        log(`WordNet loaded: ${Object.keys(wordnet).length} synsets`);
+      } catch (e) {
+        log(`WordNet failed (using fallback): ${e.message}`);
+        wordnet = {
+          "forest.n.01": { lemma: "forest", hypernyms: ["vegetation.n.01"], hyponyms: ["rainforest.n.01"] },
+          "cathedral.n.01": { lemma: "cathedral", hypernyms: ["building.n.01"], hyponyms: [] },
+          "thought.n.01": { lemma: "thought", hypernyms: ["cognition.n.01"], hyponyms: ["idea.n.01"] }
+        };
+      }
+    };
+
+    // === FIX: Added missing initRedis function ===
+    let redis = null;
+    const initRedis = () => {
+      redis = {
+        data: new Map(),
+        hset: (key, field, value) => redis.data.set(`${key}:${field}`, value),
+        hget: (key, field) => redis.data.get(`${key}:${field}`),
+        zadd: (key, score, member) => {
+          if (!redis.data.has(key)) redis.data.set(key, new Map());
+          redis.data.get(key).set(member, score);
+        },
+        lpush: (key, value) => {
+          if (!redis.data.has(key)) redis.data.set(key, []);
+          redis.data.get(key).unshift(value);
+        },
+        lrange: (key, start, end) => redis.data.get(key)?.slice(start, end) || []
+      };
+      log("Redis (in-memory) ready");
+    };
+
+    // === R5RS CLAUSE GENERATOR ===
+    const generateR5RSClause = (action) => {
+      const clauses = {
+        'spawn': '(define (spawn-universe parent) (if parent (make-branch parent) (make-root-universe)))',
+        'sync': '(define (sync-peers) (map (lambda (peer) (exchange-state peer)) peers))',
+        'pinch': '(define (detect-pinch) (filter (lambda (u) (high-complexity? u)) universes))',
+        'init': '(define (init-manifold) (load-dependencies (list "wordnet" "redis")))'
+      };
+      const clause = clauses[action] || '(define (default-action) (evolve-manifold))';
+      r5rsOutputEl.textContent = clause;
+      addToJSONL({ action, clause, timestamp: Date.now() });
+      log(`Generated R5RS: ${action}`);
+      return clause;
+    };
+
+    // === SPAWN UNIVERSE ===
+    document.getElementById('generateUniverse').onclick = () => {
+      const universe = {
+        id: ++universeId,
+        ramification: Math.floor(Math.random() * 4) + 1,
+        timestamp: Date.now()
+      };
+      universes.push(universe);
+      
+      // FIX: Create a log entry for the universe itself
+      const logEntry = { action: 'spawn', universe: universe, clause: generateR5RSClause('spawn') };
+      addToJSONL(logEntry);
+      
+      log(`Universe ${universe.id} spawned (R${universe.ramification})`);
+      
+      // Broadcast the new universe to all peers
+      const line = JSON.stringify(logEntry) + '\n';
+      peers.forEach((peer, id) => {
+        if (peer && peer.connected) {
+          peer.send(line);
+          log(`Sent new universe to ${id}`);
+        }
+      });
+    };
+
+    // === MQTT (MOSQUITTO) SETUP ===
+    mqttClient.on('connect', () => {
+      log('Connected to Mosquitto (MQTT) broker');
+      mqttClient.subscribe('manifold/discover');
+      // Announce presence
+      mqttClient.publish('manifold/discover', JSON.stringify({ id: myPeerId, type: 'discover' }));
+    });
+
+    mqttClient.on('message', (topic, message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        if (data.id === myPeerId) return; // Ignore self
+
+        if (topic === 'manifold/discover') {
+          log(`Discovered peer: ${data.id}`);
+          // Trigger WebRTC offer
+          createWebRTCOffer(data.id);
+        } else if (topic === 'manifold/offer' && data.to === myPeerId) {
+          log(`Received offer from ${data.from}`);
+          handleWebRTCOffer(data.offer, data.from);
+        } else if (topic === 'manifold/answer' && data.to === myPeerId) {
+          log(`Received answer from ${data.from}`);
+          handleWebRTCAnswer(data.answer, data.from);
+        } 
+      } catch(e) {
+        log(`MQTT Error: ${e.message}`);
+      }
+    });
+
+    // === WEBRTC P2P ===
+    const createWebRTCPeer = (peerId, initiator = false) => {
+      // Avoid duplicate connections
+      if (peers.has(peerId)) {
+        log(`Already connecting/connected to ${peerId}`);
+        return peers.get(peerId);
+      }
+
+      const peer = new Peer({
+        initiator: initiator,
+        trickle: false,
+        config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
+      });
+      peers.set(peerId, peer);
+
+      peer.on('signal', (data) => {
+        if (data.type === 'offer') {
+          mqttClient.publish('manifold/offer', JSON.stringify({ 
+            from: myPeerId, to: peerId, offer: data 
+          }));
+        } else if (data.type === 'answer') {
+           mqttClient.publish('manifold/answer', JSON.stringify({ 
+             from: myPeerId, to: peerId, answer: data 
+           }));
+        }
+      });
+      
+      peer.on('connect', () => {
+        log(`WebRTC connected to ${peerId}`);
+        // Send recent history
+        peer.send(jsonlLog.slice(-10).join(''));
+        // Add to UI list
+        const li = document.createElement('li');
+        li.textContent = peerId;
+        li.id = `li-${peerId}`;
+        document.getElementById('peer-list').appendChild(li);
+      });
+
+      peer.on('data', (data) => {
+        const lines = data.toString().split('\n').filter(l => l);
+        handleJSONLStream(lines, peerId);
+      });
+      
+      peer.on('close', () => {
+         log(`Disconnected from ${peerId}`);
+         peers.delete(peerId);
+         const li = document.getElementById(`li-${peerId}`);
+         if (li) li.remove();
+      });
+      
+      peer.on('error', (err) => {
+          log(`WebRTC Error (${peerId}): ${err.message}`);
+          peers.delete(peerId); // Clean up failed attempt
+      });
+
+      return peer;
+    };
+
+    const createWebRTCOffer = (peerId) => {
+      createWebRTCPeer(peerId, true); // true = initiator
+    };
+
+    const handleWebRTCOffer = (offer, from) => {
+      const peer = createWebRTCPeer(from, false); // false = not initiator
+      peer.signal(offer);
+    };
+
+    const handleWebRTCAnswer = (answer, from) => {
+      const peer = peers.get(from);
+      if (peer) {
+        peer.signal(answer);
+      } else {
+        log(`Received answer from unknown peer: ${from}`);
+      }
+    };
+
+    const handleJSONLStream = (lines, peerId) => {
+      let newUniverses = false;
+      lines.forEach(line => {
+        try {
+          const entry = JSON.parse(line);
+          // Simple check to avoid duplicate entries
+          if (!jsonlLog.includes(line + '\n')) {
+             addToJSONL(entry);
+             if (entry.action === 'spawn' && entry.universe) {
+                // Replicate universe
+                universes.push(entry.universe);
+                newUniverses = true;
+                log(`Replicated universe from ${peerId}: U${entry.universe.id}`);
+             }
+          }
+        } catch (e) {
+          log(`Invalid JSONL from ${peerId}: ${e.message}`);
+        }
+      });
+      if (!newUniverses && lines.length > 0) {
+          log(`Received ${lines.length} log entries from ${peerId}`);
+      }
+    };
+
+    // === SYNC PEERS ===
+    document.getElementById('syncPeers').onclick = () => {
+      generateR5RSClause('sync');
+      let syncedCount = 0;
+      peers.forEach((peer, id) => {
+        if (peer && peer.connected) {
+          peer.send(jsonlLog.slice(-5).join(''));
+          syncedCount++;
+        }
+      });
+      log(`Synced with ${syncedCount} peers`);
+    };
+
+    // === CONNECT TO PEER ===
+    document.getElementById('connectPeer').onclick = () => {
+      const peerId = document.getElementById('peerIdInput').value;
+      if (peerId && peerId !== myPeerId) {
+        createWebRTCOffer(peerId);
+      } else if (peerId === myPeerId) {
+          log("Cannot connect to self.");
+      }
+    };
+
+    // === EXPORT JSONL ===
+    document.getElementById('exportJSONL').onclick = () => {
+      const blob = new Blob([jsonlLog.join('')], { type: 'application/jsonl' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'manifold-sync.jsonl';
+      a.click();
+      URL.revokeObjectURL(url);
+      log('JSONL exported');
+    };
+
+    // === INITIALIZATION ===
+    (async () => {
+      log('Initializing In-Memory Manifold...');
+      document.getElementById('peerIdInput').placeholder = `Your ID: ${myPeerId}`;
+      await loadWordNet();
+      initRedis();
+      log('In-Memory Manifold with WebRTC + Mosquitto + JSONL ready');
+      generateR5RSClause('init');
+    })();
+  </script>
+</body>
+</html>
+

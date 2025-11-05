@@ -1,0 +1,252 @@
+{
+  "main": {
+    "id": "12662622f9c445c1",
+    "type": "split",
+    "children": [
+      {
+        "id": "883b4e8fbbc1d198",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "551aeda90e6ed910",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "realted/THE M-EXPRESSION - S-EXPRESSION DUALITY.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "THE M-EXPRESSION - S-EXPRESSION DUALITY"
+            }
+          },
+          {
+            "id": "797662362b451dd1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Extended JSON Canvas Spec for R5RS Polynomial Log.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Extended JSON Canvas Spec for R5RS Polynomial Log"
+            }
+          },
+          {
+            "id": "d718c56189964afe",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "New Expressiom/Untitled 1.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Untitled 1"
+            }
+          },
+          {
+            "id": "3d5b55241694f48f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "deepseek/Third - 11.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Third - 11"
+            }
+          },
+          {
+            "id": "8c510fe6d6e05d18",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "layer3/Second.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Second"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4e966d9d5a8aa339",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "a6efd10f32dcc32b",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical",
+            "autoReveal": false
+          },
+          "icon": "lucide-folder-closed",
+          "title": "Files"
+        }
+      },
+      {
+        "id": "1a181bbc19e6f2ef",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "lisp",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          },
+          "icon": "lucide-search",
+          "title": "Search"
+        }
+      },
+      {
+        "id": "04d9a70c44409194",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-tags",
+          "title": "Tags"
+        }
+      },
+      {
+        "id": "e7f314d74d027419",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {},
+          "icon": "lucide-bookmark",
+          "title": "Bookmarks"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "6a0aa077e78ff544",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "c1f5205265b5e54a",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "file": "New Expressiom/Untitled 1.md",
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-coming-in",
+          "title": "Backlinks"
+        }
+      },
+      {
+        "id": "ebabdb8e1af2dc39",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "file": "New Expressiom/Untitled 1.md",
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-going-out",
+          "title": "Outgoing links"
+        }
+      },
+      {
+        "id": "36eaeb0c423c2bea",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "New Expressiom/Untitled 1.md",
+            "followCursor": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-list",
+          "title": "Outline"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "8c510fe6d6e05d18",
+  "lastOpenFiles": [
+    "layer3/First.md",
+    "layer3/Second.md",
+    "layer3/manifold-consumer.html",
+    "layer 2/03-gemini/Tenth.md",
+    "layer3",
+    "layer 2/03-gemini/Ninth.md",
+    "layer 2/03-gemini/Eigth.md",
+    "layer 2/03-gemini/Seventh.md",
+    "layer 2/03-gemini/Sixth.md",
+    "layer 2/03-gemini/Fifth.md",
+    "layer 2/03-gemini/Fourth.md",
+    "layer 2/03-gemini/Third.md",
+    "layer 2/03-gemini/Public.v2.md",
+    "layer 2/03-gemini/Private.v2.md",
+    "layer 2/03-gemini/Second.md",
+    "layer 2/01-grok/Second v1.md",
+    "layer 2/01-grok/Seventh.md",
+    "layer 2/01-grok/Sixth.md",
+    "gemeni/COMPUTATIONAL MANIFOLD — PURE LISP IMPLEMENTATION.md",
+    "layer 2/01-grok/Second v2.md",
+    "layer 2/01-grok/Fifth.md",
+    "layer 2/01-grok/Fourth.md",
+    "layer 2/01-grok/Third.md",
+    "layer 2/01-grok",
+    "layer 2/02-deepseek/Autonomous IO Agent — Manifold + NLP + Media.md",
+    "gemeni/Autonomous IO Agent — Manifold.md",
+    "layer 2/02-deepseek",
+    "layer 2",
+    "gemeni/AUTONOMOUS METAVERSE — Projective Pinch-to-Branch OS.md",
+    "gemeni/PROJECTIVE PINCH to BRANCH - Rumsfeldian Manifold v2.md",
+    "gemeni/PROJECTIVE PINCH to BRANCH - The Final Rumsfeldian Manifold.md",
+    "gemeni",
+    "deepseek",
+    "grok",
+    "New Expressiom"
+  ]
+}
